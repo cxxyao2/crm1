@@ -1,13 +1,13 @@
 import React from "react";
 import CompanyProfile from "./CompanyProfile";
-import CurrentLocation from "./CurrentLocaiton";
+import CurrentLocation from "./CurrentLocation";
 
 function LocationUpload(props) {
   return (
-    <div>
+    <>
       <CompanyProfile />
       <CurrentLocation />
-    </div>
+    </>
   );
 }
 

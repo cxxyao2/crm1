@@ -4,19 +4,24 @@ import Avatar from "./avatar/Avatar";
 const CompanyProfile = () => {
   return (
     <>
-      <div className=" row g-3 bg-white border">
+      <div className=" container bg-white border my-2">
         <Avatar />
-        <div className="col-2  ">Company</div>
-        <div className="col-4  ">Twitter.com</div>
-        <div className="col-1 ">&nbsp;</div>
-        <div className="col-2  ">Tel</div>
-        <div className="col-3  ">+1 5418989888</div>
-
-        <div className="col-2  ">Field</div>
-        <div className="col-4  ">Fossil</div>
-        <div className="col-1 ">&nbsp;</div>
-        <div className="col-2  ">Address</div>
-        <div className="col-3  ">Amazon Forest</div>
+        <div className="row">
+          <div className="col-2  ">Company</div>
+          <div className="col-4  ">Twitter.com</div>
+          <div className="col-1 ">&nbsp;</div>
+          <div className="col-2  ">Tel</div>
+          <div className="col-3 .text-nowrap ">+1&nbsp;5418989888</div>
+        </div>
+        <div className="row">
+          <div className="col-2  ">Field</div>
+          <div className="col-4  ">Fossil</div>
+          <div className="col-1 ">&nbsp;</div>
+          <div className="col-2  ">Address</div>
+          <div className="col-3 .text-nowrap  ">
+            <label>Amazon&nbsp;Forest</label>
+          </div>
+        </div>
       </div>
     </>
   );

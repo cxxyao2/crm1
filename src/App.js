@@ -1,9 +1,9 @@
 import "./App.css";
-import CompanyProfile from "./components/CompanyProfile";
+import LocationUpload from "./components/LocationUpload";
 import Avatar from "./components/avatar/Avatar";
 
 function App() {
-  return <CompanyProfile />;
+  return <LocationUpload />;
 }
 
 export default App;

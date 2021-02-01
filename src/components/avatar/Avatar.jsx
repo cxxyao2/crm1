@@ -8,7 +8,7 @@ const Avatar = () => {
       <div className="col">
         <img src={avatar} alt="avatar" className="rounded-circle avatar" />
       </div>
-      <div className="col">
+      <div className="col align-middle">
         <dl>
           <dt>Mike Jeff</dt>
           <dd>CTO</dd>
