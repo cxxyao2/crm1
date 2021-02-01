@@ -1,8 +1,9 @@
 import "./App.css";
-import Tabs from "./components/tabs";
+import CompanyProfile from "./components/CompanyProfile";
+import Avatar from "./components/avatar/Avatar";
 
 function App() {
-  return <Tabs />;
+  return <CompanyProfile />;
 }
 
 export default App;
