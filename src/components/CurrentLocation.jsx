@@ -29,7 +29,7 @@ function CurrentLocation(props) {
           </div>
         </div>
       </div>
-      <div className=" container bg-white border my-2">google map</div>
+      <div className=" container bg-white border rounded my-2">google map</div>
     </>
   );
 }

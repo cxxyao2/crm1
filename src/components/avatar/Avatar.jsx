@@ -4,7 +4,7 @@ import "./Avatar.css";
 
 const Avatar = () => {
   return (
-    <div className="row row-cols-2 gy-3 border-0">
+    <div className="row  gy-2 border-0">
       <div className="col">
         <img src={avatar} alt="avatar" className="rounded-circle avatar" />
       </div>

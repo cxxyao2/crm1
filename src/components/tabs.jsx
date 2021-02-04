@@ -13,7 +13,7 @@ const tabData = [
 
 function Tabs() {
   return (
-    <div className="container bg-white">
+    <div className="container bg-white rounded my-2 p-2">
       <Tab tabData={tabData} />
       <Content tabData={tabData} />
     </div>
