@@ -8,15 +8,15 @@ function CurrentLocation(props) {
           <strong>Coordinations</strong>
         </div>
         <div className="row">
-          <div className="col-2 ">
+          <div className="col-6 col-md-2 ">
             <label class="form-label">Longitude</label>
           </div>
-          <div className="col-4  ">
+          <div className="col-6 col-md-4  ">
             <label class="form-label">78.455511</label>
           </div>
 
-          <div className="col-2 ">Latitude</div>
-          <div className="col-4 ">
+          <div className="col-6 col-md-2 ">Latitude</div>
+          <div className="col-6 col-md-4 ">
             <label class="form-label ">11.5418989888</label>
           </div>
         </div>
@@ -29,7 +29,7 @@ function CurrentLocation(props) {
           </div>
         </div>
       </div>
-      <div className=" container bg-white border my-2">googe map</div>
+      <div className=" container bg-white border my-2">google map</div>
     </>
   );
 }

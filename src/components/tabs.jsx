@@ -6,9 +6,9 @@ import PhotoUpload from "./PhotoUpload";
 import CompanyProfile from "./CompanyProfile";
 
 const tabData = [
-  { name: "home", isActive: true, component: CompanyProfile },
-  { name: "profile", isActive: false, component: PhotoUpload },
-  { name: "other", isActive: false, component: ActivityLog },
+  { name: "Location", isActive: true, component: CompanyProfile },
+  { name: "Photo", isActive: false, component: PhotoUpload },
+  { name: "Log", isActive: false, component: ActivityLog },
 ];
 
 function Tabs() {
