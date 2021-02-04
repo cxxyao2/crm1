@@ -1,10 +1,11 @@
 import React from "react";
 import Avatar from "./avatar/Avatar";
+import CurrentLocation from "./CurrentLocation";
 
 const CompanyProfile = () => {
   return (
     <>
-      <div className=" container bg-white border my-2">
+      <div className=" container bg-white border rounded mt-2 mb-2">
         <Avatar />
         <div className="row">
           <div className="col-6 col-md-2">Company</div>
@@ -23,6 +24,7 @@ const CompanyProfile = () => {
           </div>
         </div>
       </div>
+      <CurrentLocation />
     </>
   );
 };

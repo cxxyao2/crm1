@@ -3,7 +3,7 @@ import React from "react";
 function CurrentLocation(props) {
   return (
     <>
-      <div className="container bg-white border rounded ">
+      <div className=" container bg-white border rounded my-2 p-2">
         <div className="col-12">
           <strong>Coordinations</strong>
         </div>

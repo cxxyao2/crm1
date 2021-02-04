@@ -2,7 +2,7 @@ import React from "react";
 
 function ActivityLog(props) {
   return (
-    <div className="container">
+    <div className="container bg-white border rounded mt-2 mb-2 p-2">
       <div className="form-check">
         <input
           className="form-check-input"
@@ -27,12 +27,17 @@ function ActivityLog(props) {
         </label>
       </div>
       <div className="input-group">
-        <span className="input-group-text">Log</span>
+        <span className="input-group-text border-top-0 border-bottom-0  border-end-0 border-start  border-3 border-primary">
+          Log
+        </span>
         <textarea
-          className="form-control"
+          className="form-control outline-0"
           aria-label="With textarea"
         ></textarea>
       </div>
+      <button type="button" className="btn btn-sm btn-primary mt-3">
+        Primary
+      </button>
     </div>
   );
 }
