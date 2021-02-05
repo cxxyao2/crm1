@@ -12,12 +12,12 @@ function CurrentLocation(props) {
             <label class="form-label">Longitude</label>
           </div>
           <div className="col-6 col-md-4  ">
-            <label class="form-label">78.455511</label>
+            <label class="form-label text-info">78.455511</label>
           </div>
 
           <div className="col-6 col-md-2 ">Latitude</div>
           <div className="col-6 col-md-4 ">
-            <label class="form-label ">11.5418989888</label>
+            <label class="form-label text-info">11.5418989888</label>
           </div>
         </div>
         <div className="row">
