@@ -1,6 +1,6 @@
 import React from "react";
 import CompanyProfile from "./CompanyProfile";
-import CurrentLocation from "./CurrentLocation";
+import CurrentLocation from "./LocationWrapper";
 
 function LocationUpload(props) {
   return (

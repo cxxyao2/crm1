@@ -1,6 +1,6 @@
 import React from "react";
 import Avatar from "./avatar/Avatar";
-import CurrentLocation from "./CurrentLocation";
+import CurrentLocation from "./LocationWrapper";
 
 const CompanyProfile = () => {
   return (
@@ -24,7 +24,6 @@ const CompanyProfile = () => {
           </div>
         </div>
       </div>
-      <CurrentLocation />
     </>
   );
 };
