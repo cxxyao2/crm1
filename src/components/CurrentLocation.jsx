@@ -4,9 +4,11 @@ import { myMapKey } from "../config/config.json";
 
 const mapStyles = {
   map: {
-    position: "relative",
-    width: "90%",
-    height: "90%",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "400px",
   },
 };
 
@@ -20,12 +22,32 @@ class CurrentLocation extends Component {
         lng: lng,
       },
     };
+    this.mapRef = React.createRef();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.currentLocation !== this.state.currentLocation) {
+      this.recenterMap();
+    }
+  }
+
+  recenterMap() {
+    const map = this.mapRef.current;
+    const current = this.state.currentLocation;
+    const google = this.props.google;
+    const maps = google.maps;
+
+    if (map) {
+      let center = new maps.LatLng(current.lat, current.lng);
+      map.panTo(center);
+    }
   }
 
   render() {
     const { lat: centerLat, lng: centerLng } = this.props.initialCenter;
     return (
       <Map
+        ref={this.mapRef}
         google={this.props.google}
         initialCenter={{ lat: centerLat, lng: centerLng }}
         style={mapStyles.map}
@@ -39,10 +61,10 @@ class CurrentLocation extends Component {
 
 //  since you will need to set the map with a center in case the current location is not provided
 CurrentLocation.defaultProps = {
-  zoom: 14,
+  zoom: 7,
   initialCenter: {
-    lat: 40.0,
-    lng: -70.0,
+    lat: 40,
+    lng: -70,
   },
 };
 

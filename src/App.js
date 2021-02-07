@@ -2,11 +2,11 @@ import "./App.css";
 import LocationUpload from "./components/LocationUpload";
 import Avatar from "./components/avatar/Avatar";
 import Tabs from "./components/tabs";
-import CurrentLocation from "./components/CurrentLocation";
+import LocationWrapper from "./components/LocationWrapper";
 
 function App() {
   // return <Tabs />;
-  return <CurrentLocation />;
+  return <LocationWrapper />;
 }
 
 export default App;

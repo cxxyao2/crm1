@@ -38,9 +38,11 @@ class LocationWrapper extends Component {
   }
 
   render() {
-    if (this.state.locationError)
+    if (!this.state.currentLocation || this.state.locationError.message)
       return (
-        <div className="text-error">{this.state.locationError.message}</div>
+        <div className="container bg-white border  text-error">
+          {this.state.locationError.message}
+        </div>
       );
     return (
       <>
@@ -61,7 +63,7 @@ class LocationWrapper extends Component {
             <div className="col-6 col-md-2 ">Latitude</div>
             <div className="col-6 col-md-4 ">
               <label class="form-label text-info">
-                {this.state.currentLocation.lng}
+                {this.state.currentLocation.lat}
               </label>
             </div>
           </div>
@@ -74,7 +76,7 @@ class LocationWrapper extends Component {
             </div>
           </div>
         </div>
-        <div className=" container bg-white border rounded my-2">
+        <div className="container bg-white  position-relative  p-0">
           <CurrentLocation initialCenter={this.state.currentLocation} />
         </div>
       </>
@@ -82,6 +84,14 @@ class LocationWrapper extends Component {
   }
 }
 
+LocationWrapper.defaultProps = {
+  zoom: 7,
+  initialCenter: {
+    lat: 40.0,
+    lng: -70.0,
+  },
+  centerAroundCurrentLocation: true,
+};
 export default GoogleApiWrapper({
   apiKey: myMapKey,
 })(LocationWrapper);
