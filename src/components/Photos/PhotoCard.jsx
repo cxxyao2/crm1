@@ -6,9 +6,9 @@ class PhotoCard extends PureComponent {
   render() {
     return (
       <div className="col-md-4  col-lg-4 col-xxl-3 col-sm-xs-11 my-1  rounded overflow-hidden">
-        <div className="d-flex bg-warning">
-          <div className="p-2 w-100 bg-highlight">&nbsp;</div>
-          <div className="p-2 flex-shrink-1 bg-warning">
+        <div className="d-flex bg-info">
+          <div className="p-2 w-100 ">&nbsp;</div>
+          <div className="p-2 flex-shrink-1 ">
             <button
               type="button"
               className="btn-close  p-2 "

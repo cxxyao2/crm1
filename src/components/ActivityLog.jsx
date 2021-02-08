@@ -2,7 +2,12 @@ import React from "react";
 import CheckGroup from "./CheckGroup";
 
 const activityList = [
-  { id: 1, value: 1, checked: true, label: "Brand Confirmation" },
+  {
+    id: 1,
+    value: 1,
+    checked: true,
+    label: "Brand-specific Neon Sign Confirmation",
+  },
   { id: 2, value: 2, checked: false, label: "Product Arrangement" },
   { id: 3, value: 3, checked: false, label: "Technical Service" },
   { id: 4, value: 4, checked: false, label: "Sample Extraction" },

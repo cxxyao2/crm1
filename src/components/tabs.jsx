@@ -1,16 +1,8 @@
 import Content from "./Content";
 import Tab from "./Tab";
-import ActivityLog from "./ActivityLog";
-import PhotoUpload from "./PhotoUpload";
-import CompanyProfile from "./CompanyProfile";
 
-const tabData = [
-  { name: "Location", isActive: true, component: CompanyProfile },
-  { name: "Photo", isActive: false, component: PhotoUpload },
-  { name: "Log", isActive: false, component: ActivityLog },
-];
-
-function Tabs() {
+function Tabs(props) {
+  const { tabData } = props;
   return (
     <div className="container bg-white rounded my-2 p-2">
       <Tab tabData={tabData} />

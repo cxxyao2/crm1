@@ -22,7 +22,7 @@ class PhotoCardContainer extends PureComponent {
 
   render() {
     return (
-      <div className="container bg-white overflow-hidden">
+      <div className="container bg-white rounded  overflow-hidden">
         <div className="row bg-white justify-content-between">
           {this.state.cards &&
             this.state.cards.map(

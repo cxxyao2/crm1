@@ -5,7 +5,7 @@ import InfoLabel from "./InfoLabel";
 const CompanyProfile = () => {
   return (
     <>
-      <div className=" container bg-white border rounded mt-2 mb-2">
+      <div className=" container bg-white border rounded my-2">
         <Avatar />
         <div className="row">
           <InfoLabel title="Company" content="Twitter.com" />

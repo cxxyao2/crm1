@@ -76,7 +76,7 @@ class LocationWrapper extends Component {
             </div>
           </div>
         </div>
-        <div className="container bg-white  position-relative  p-0">
+        <div className="container bg-white  border rounded  p-0">
           <CurrentLocation initialCenter={this.state.currentLocation} />
         </div>
       </>

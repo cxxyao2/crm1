@@ -2,16 +2,6 @@ import React, { Component } from "react";
 import { Map, Marker, GoogleApiWrapper } from "google-maps-react";
 import { myMapKey } from "../config/config.json";
 
-const mapStyles = {
-  map: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "400px",
-  },
-};
-
 class CurrentLocation extends Component {
   constructor(props) {
     super(props);
@@ -46,15 +36,18 @@ class CurrentLocation extends Component {
   render() {
     const { lat: centerLat, lng: centerLng } = this.props.initialCenter;
     return (
-      <Map
-        ref={this.mapRef}
-        google={this.props.google}
-        initialCenter={{ lat: centerLat, lng: centerLng }}
-        style={mapStyles.map}
-        zoom={this.props.zoom}
-      >
-        <Marker position={{ lat: centerLat, lng: centerLng }} />
-      </Map>
+      <>
+        <Map
+          ref={this.mapRef}
+          google={this.props.google}
+          initialCenter={{ lat: centerLat, lng: centerLng }}
+          className="container row my-2"
+          style={{ left: 3 }}
+          zoom={this.props.zoom}
+        >
+          <Marker position={{ lat: centerLat, lng: centerLng }} />
+        </Map>
+      </>
     );
   }
 }
