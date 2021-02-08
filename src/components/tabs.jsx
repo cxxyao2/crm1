@@ -1,6 +1,5 @@
 import Content from "./Content";
 import Tab from "./Tab";
-import Placeholder from "./Placeholder";
 import ActivityLog from "./ActivityLog";
 import PhotoUpload from "./PhotoUpload";
 import CompanyProfile from "./CompanyProfile";
