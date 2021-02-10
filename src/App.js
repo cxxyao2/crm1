@@ -6,7 +6,11 @@ import Inventory from "./components/Inventory";
 
 function App() {
   // return <Tabs />;
-  return <Inventory />;
+  return (
+    <div className="container bg-white rounded border">
+      <Inventory />
+    </div>
+  );
 }
 
 export default App;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Check(props) {
+ function Check(props) {
   const { id, value, label } = props.activity;
   return (
     <div className="form-check">
