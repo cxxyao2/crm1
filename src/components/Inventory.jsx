@@ -22,7 +22,7 @@ function Inventory() {
               </div>
 
               <select className="form-select my-2" aria-label="Storage Area">
-                <option selected>Select an storage area</option>
+                <option selected>Select a storage zone</option>
                 <option value="1">Area_A</option>
                 <option value="2">Area_B</option>
                 <option value="3">Area_C</option>
