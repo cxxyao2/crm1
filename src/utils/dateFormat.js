@@ -14,14 +14,14 @@ export function getTodayYMD() {
   return todayDate;
 }
 
-// YYYY-MM-DD => YYYYMMDD
+// YYYY-MM-DD => YYYY MM DD
 export function dateYMD(iniDate) {
   let currentDate;
   if (typeof iniDate === "string") currentDate = new Date(iniDate);
   if (typeof iniDate === "object") currentDate = iniDate;
   let currentYear = String(currentDate.getFullYear());
-  let currentMonth = String(currentDate.getMonth() + 1);
-  let currentDay = String(currentDate.getDate());
+  let currentMonth = " ".concat(String(currentDate.getMonth() + 1));
+  let currentDay = " ".concat(String(currentDate.getDate()));
   if (currentMonth.length === 1) {
     currentMonth = "0".concat(currentMonth);
   }
