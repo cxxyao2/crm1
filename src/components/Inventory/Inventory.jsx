@@ -70,7 +70,8 @@ class Inventory extends Form {
     return (
       <>
         <form onSubmit={this.handleSubmit}>
-          <div className="container bg-white my-2 p-2">
+          <div className="container  border rounded bg-white my-2 p-2">
+            <div className="col-12 col-md-12 fw-bold">Inventory Keeping</div>
             <div className="row">
               <InfoLabel title={"Date"} content={getTodayYMD()} />
               <InfoLabel title={"Operator"} content={userName} />
@@ -99,8 +100,8 @@ class Inventory extends Form {
             </div>
           </div>
         </form>
-        <div className="container  bg-white my-2 p-2">
-          {!stockData && <div>No stock Data</div>}
+        <div className="container  border rounded bg-white my-2 p-2">
+          {!stockData && <div>No Stock Data</div>}
           {stockData &&
             stockData.map((data) => <StockRecord key={data._id} data={data} />)}
         </div>

@@ -29,11 +29,11 @@ class StockRecord extends Component {
     try {
       stock = { ...this.state.stock };
       stock.quantity = this.state.actualQty;
-      this.setState({ stock });
       let result = await service.updateStock(stock);
       if (result) {
         this.setState({ succeed: "Data saved successfully!" });
         this.setState({ readOnlyFlag: true });
+        this.setState({ stock });
       }
     } catch (error) {
       this.setState({ error: error.message + " : " + error.response.data });
@@ -100,6 +100,7 @@ class StockRecord extends Component {
             className="btn btn-info btn-sm col-5 col-md-3 mx-2 my-1"
             onClick={(event) => {
               event.preventDefault();
+              this.clearMessage();
               this.setState({ readOnlyFlag: false });
               this.qtyRef.current.focus();
             }}
