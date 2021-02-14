@@ -1,73 +1,120 @@
 import React, { Component } from "react";
 import InfoLabel from "../InfoLabel";
 import { dateYMD } from "../../utils/dateFormat";
+import service from "../../services/stockService";
+import axios from "axios";
 
 class StockRecord extends Component {
-  state = {
-    qty: this.props.data.qty,
-    readOnlyFlag: true,
-    actualQty: this.props.data.qty,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      stock: this.props.data,
+      readOnlyFlag: true,
+      actualQty: this.props.data.quantity,
+      error: undefined,
+      succeed: undefined,
+    };
+
+    this.qtyRef = React.createRef();
+  }
 
   handleChange = (event) => {
-    let newQty = event.target.value;
-    if (newQty > 9000) newQty = 100;
+    let newQty = event.currentTarget.value;
     this.setState({ actualQty: newQty });
   };
 
-  handleSave = () => {
-    // TODO
-    // service
-    console.log("save is ok");
+  handleSave = async () => {
+    let stock;
+    this.clearMessage();
+    try {
+      stock = { ...this.state.stock };
+      stock.quantity = this.state.actualQty;
+      this.setState({ stock });
+      let result = await service.updateStock(stock);
+      if (result) {
+        this.setState({ succeed: "Data saved successfully!" });
+        this.setState({ readOnlyFlag: true });
+      }
+    } catch (error) {
+      this.setState({ error: error.message + " : " + error.response.data });
+      console.log("error is", error.response.data);
+    }
+  };
+
+  clearMessage = () => {
+    this.setState({ error: undefined, succeed: undefined });
   };
 
   render() {
-    const { data } = this.props;
+    const { stock: data, error, succeed } = this.state;
+    const alertClasses = "d-flex border rounded justify-content-between ".concat(
+      error ? " bg-danger" : "bg-info "
+    );
 
     return (
-      <div className="row" key={data.item}>
-        <InfoLabel title="area" content={"A01"} />
-        <InfoLabel title="code" content={data.item} />
-        <InfoLabel title="qty" content={this.state.qty} />
-        <div className="mb-2 row">
-          <label htmlFor="actualQty" className="col-6 col-md-3 col-form-label">
-            Actual Qty
-          </label>
-          <div className="col-6 col-md-3">
-            <input
-              type="number"
-              min={0}
-              max={9999}
-              className="form-control"
-              id="actualQty"
-              name="actualQty"
-              value={this.state.actualQty}
-              onChange={this.handleChange}
-              readOnly={this.state.readOnlyFlag}
-            />
+      <>
+        {(error || succeed) && (
+          <div className={alertClasses} role="alert">
+            <div className="p-2">{error || succeed}</div>
+            <div className="p-2">
+              <button
+                type="button"
+                className="btn-close"
+                aria-label="Close"
+                onClick={this.clearMessage}
+              ></button>
+            </div>
           </div>
+        )}
+        <div className="row">
+          <InfoLabel title="area" content={data.area.name} />
+          <InfoLabel title="item" content={data.product.name} />
+          <InfoLabel title="qty" content={data.quantity} />
+          <div className="mb-2 row">
+            <label
+              htmlFor="actualQty"
+              className="col-6 col-md-3 col-form-label"
+            >
+              Actual Qty
+            </label>
+            <div className="col-6 col-md-3">
+              <input
+                ref={this.qtyRef}
+                type="number"
+                min={0}
+                max={9999}
+                className="form-control"
+                id="actualQty"
+                name="actualQty"
+                value={this.state.actualQty}
+                onChange={this.handleChange}
+                readOnly={this.state.readOnlyFlag}
+              />
+            </div>
+          </div>
+
+          <InfoLabel title="unit" content="barrel" />
+          <InfoLabel title="expired at" content={dateYMD(data.expiredDate)} />
+
+          <button
+            className="btn btn-info btn-sm col-5 col-md-3 mx-2 my-1"
+            onClick={(event) => {
+              event.preventDefault();
+              this.setState({ readOnlyFlag: false });
+              this.qtyRef.current.focus();
+            }}
+          >
+            Edit
+          </button>
+          <button
+            className="btn btn-secondary btn-sm col-5 col-md-3 m-1"
+            onClick={this.handleSave}
+          >
+            Save
+          </button>
+          <div className="dropdown-divider"></div>
         </div>
-
-        <InfoLabel title="unit" content={data.unit} />
-        <InfoLabel title="expired at" content={dateYMD(data.expired)} />
-
-        <button
-          className="btn btn-info btn-sm col-5 col-md-3 mx-2 my-1"
-          onClick={(event) => {
-            this.setState({ readOnlyFlag: false });
-            event.preventDefault();
-          }}
-        >
-          Edit
-        </button>
-        <button
-          className="btn btn-secondary btn-sm col-5 col-md-3 m-1"
-          onClick={() => this.handleSave}
-        >
-          Save
-        </button>
-        <div className="dropdown-divider"></div>
-      </div>
+      </>
     );
   }
 }

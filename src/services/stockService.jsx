@@ -2,8 +2,9 @@ import http from "./httpService";
 
 const apiEndpoint = "http://localhost:5000/api/stocks";
 
-export function getStocks() {
-  return http.get(apiEndpoint);
+export function getStocks(area) {
+  const params = new URLSearchParams([["area", area]]);
+  return http.get(apiEndpoint, { params });
 }
 
 export function deleteStock(stockId) {
@@ -19,7 +20,13 @@ export function saveStock(stock) {
 }
 
 export function updateStock(stock) {
-  return http.put(apiEndpoint, stock);
+  const updateUrl = apiEndpoint + "/" + stock._id;
+  return http.put(updateUrl, {
+    areaId: stock.area._id,
+    productId: stock.product._id,
+    quantity: stock.quantity,
+    expiredDate: stock.expiredDate,
+  });
 }
 
 const service = {

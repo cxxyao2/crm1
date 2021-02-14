@@ -1,6 +1,8 @@
 import { Component } from "react";
+
+import Joi from "joi-browser";
 import Input from "./Input";
-import Select from "./Select";
+import Select from "./common/Select";
 
 class Form extends Component {
   state = {
@@ -9,23 +11,18 @@ class Form extends Component {
   };
 
   validate = () => {
-    const Options = {
-      strict: true,
-      abortEarly: false,
-    };
-    this.schema.validate(this.state.data, Options).catch(function (err) {
-      let errors = {};
-      if (!err.errors) errors = null;
-      if (err.errors.length === 1) {
-        errors[err.path] = err.message;
-      }
-      if (err.errors.length > 1) {
-        err.inners.forEach((inner) => {
-          errors[inner.path] = inner.message;
-        });
-      }
-      return errors;
+    const options = { abortEarly: false };
+
+    const result = Joi.validate(this.state.data, this.schema, options);
+
+    if (!result.error) return null;
+
+    const errors = {};
+    result.error.details.forEach((detail) => {
+      errors[detail.path[0]] = detail.message;
     });
+
+    return errors;
   };
 
   handleSubmit = (e) => {

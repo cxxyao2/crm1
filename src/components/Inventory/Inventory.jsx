@@ -1,76 +1,109 @@
-import React, { Component } from "react";
+import Form from "../Form";
 import { getTodayYMD } from "../../utils/dateFormat";
 import InfoLabel from "../InfoLabel";
 import StockRecord from "./StockRecord";
 import service from "../../services/stockService";
 import areaService from "../../services/stockareaService";
+import Joi from "joi-browser";
 import Select from "../common/Select";
 
-class Inventory extends Component {
+class Inventory extends Form {
   state = {
+    data: { storageArea: "" },
+    errors: {},
+    errorMessage: undefined,
     areas: undefined,
+    selectedArea: undefined,
     userName: "Mike",
-    stockData: [
-      {
-        item: "essence",
-        qty: 12,
-        actualQty: 12,
-        unit: "barrel",
-        expired: "2021/01/31",
-        readOnly: true,
-      },
-      {
-        item: "petrol",
-        qty: 13,
-        actualQty: 13,
-        unit: "litre",
-        expired: "2021/02/02",
-        readOnly: true,
-      },
-    ],
+    stockData: undefined,
+  };
+
+  schema = {
+    storageArea: Joi.string().required().trim(),
   };
 
   componentDidMount() {
-    this.getStockData();
+    this.getStorageAreas();
   }
 
-  getStockData = async () => {
-    const stockData = await service.getStocks();
-    this.setState({ stockData});
-    const areas = await areaService.getStockareas();
-    this.setState({areas});
+  getStorageAreas = async () => {
+    const result = await areaService.getStockareas();
+    this.setState({ areas: result.data });
+  };
+
+  doSubmit = async () => {
+    try {
+      const result = await service.getStocks(this.state.data["storageArea"]);
+
+      if (result.data && result.data.length >= 1) {
+        this.setState({ stockData: result.data });
+      } else {
+        this.setState({ stockData: undefined });
+      }
+    } catch (error) {
+      this.setState({ errorMessage: error.message });
+    }
+  };
+
+  handleChange = ({ currentTarget: input }) => {
+    const data = { ...this.state.data };
+
+    data[input.name] = input.value;
+    this.setState({ data });
+
+    const errors = { ...this.state.errors };
+    let errorMessage;
+
+    if (input.value === " ") {
+      errorMessage = "please select a storage area";
+    }
+    if (errorMessage) errors[input.name] = errorMessage;
+    else delete errors[input.name];
+    this.setState({ errors });
   };
 
   render() {
-    const { stockData, userName } = this.state;
+    const { stockData, userName, areas } = this.state;
+    if (this.state.errorMessage) {
+      return <div>{this.state.errorMessage}</div>;
+    }
     return (
       <>
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <div className="container bg-white my-2 p-2">
             <div className="row">
               <InfoLabel title={"Date"} content={getTodayYMD()} />
               <InfoLabel title={"Operator"} content={userName} />
-              <div className="col-12 col-md-6">
-                <select className="form-select" aria-label="Storage Area">
-                  <option selected>Select a storage zone</option>
-                  <option value="1">Area_A</option>
-                  <option value="2">Area_B</option>
-                  <option value="3">Area_C</option>
-                </select>
+              <div className="col-12 col-md-12 my-2">
+                {!areas && <label>no storage area data</label>}
+                {areas && (
+                  <Select
+                    name={"storageArea"}
+                    value={this.state.selectedArea}
+                    label={"Select a storage zone:"}
+                    options={areas}
+                    onChange={this.handleChange}
+                    aria-label="Storage Area"
+                    error={this.state.errors["storageArea"]}
+                  />
+                )}
               </div>
-              <div className="col-12 col-md-6">
-                <button className="btn btn-primary btn-sm btn-info my-1">
+              <div className="col-12 col-md-12">
+                <button
+                  className="btn btn-primary btn-sm btn-info col-5 col-md-3 my-1"
+                  type="submit"
+                >
                   search
                 </button>
               </div>
             </div>
           </div>
-          <div className="container  bg-white my-2 p-2">
-            {stockData.map((data) => (
-              <StockRecord key={data.item} data={data} />
-            ))}
-          </div>
         </form>
+        <div className="container  bg-white my-2 p-2">
+          {!stockData && <div>No stock Data</div>}
+          {stockData &&
+            stockData.map((data) => <StockRecord key={data._id} data={data} />)}
+        </div>
       </>
     );
   }
