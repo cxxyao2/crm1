@@ -14,7 +14,6 @@
     "lodash": "^4.17.20",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-pdf": "^5.1.0",
     "react-scripts": "4.0.1",
     "react-toastify": "^7.0.3",
     "react-webcam": "^5.2.2",

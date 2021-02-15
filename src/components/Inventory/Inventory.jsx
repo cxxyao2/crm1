@@ -6,20 +6,21 @@ import service from "../../services/stockService";
 import areaService from "../../services/stockareaService";
 import Joi from "joi-browser";
 import Select from "../common/Select";
+import { saveBlobtoLocalFile, makeCSV } from "../../utils/fileTypeConvert";
 
 class Inventory extends Form {
   state = {
-    data: { storageArea: "" },
+    data: { storageArea: "", showExpired: false },
     errors: {},
     errorMessage: undefined,
     areas: undefined,
-    selectedArea: undefined,
     userName: "Mike",
     stockData: undefined,
   };
 
   schema = {
     storageArea: Joi.string().required().trim(),
+    showExpired: Joi.boolean(),
   };
 
   componentDidMount() {
@@ -32,6 +33,7 @@ class Inventory extends Form {
   };
 
   doSubmit = async () => {
+    console.log("hi,data is ", this.state.data);
     try {
       const result = await service.getStocks(this.state.data["storageArea"]);
 
@@ -48,13 +50,24 @@ class Inventory extends Form {
   handleChange = ({ currentTarget: input }) => {
     const data = { ...this.state.data };
 
-    data[input.name] = input.value;
+    if (input.name === "storageArea") {
+      data[input.name] = input.value;
+    }
+
+    if (input.name === "showExpired") {
+      if (input.checked) {
+        data[input.name] = true;
+      } else {
+        data[input.name] = false;
+      }
+    }
     this.setState({ data });
+    console.log("new data is", data);
 
     const errors = { ...this.state.errors };
     let errorMessage;
 
-    if (input.value === " ") {
+    if (input.name === "storageArea" && input.value === " ") {
       errorMessage = "please select a storage area";
     }
     if (errorMessage) errors[input.name] = errorMessage;
@@ -62,8 +75,40 @@ class Inventory extends Form {
     this.setState({ errors });
   };
 
+  downloadFile = (event) => {
+    event.preventDefault();
+    let output = [];
+    const { stockData } = this.state;
+    if (stockData && stockData.length >= 1) {
+      output.push([
+        "_id",
+        "area._id",
+        "area.code",
+        "area.name",
+        "product._id",
+        "product.name",
+        "quantity",
+        "expiredDate",
+      ]);
+      stockData.forEach((row) => {
+        output.push([
+          row.id,
+          row.area._id,
+          row.area.code,
+          row.area.name,
+          row.product._id,
+          row.product.name,
+          row.quantity,
+          row.expiredDate,
+        ]);
+      });
+      let content = makeCSV(output);
+      saveBlobtoLocalFile(content, "stockdata.csv", "text/csv");
+    }
+  };
+
   render() {
-    const { stockData, userName, areas } = this.state;
+    const { stockData, userName, areas, data } = this.state;
     if (this.state.errorMessage) {
       return <div>{this.state.errorMessage}</div>;
     }
@@ -75,27 +120,56 @@ class Inventory extends Form {
             <div className="row">
               <InfoLabel title={"Date"} content={getTodayYMD()} />
               <InfoLabel title={"Operator"} content={userName} />
-              <div className="col-12 col-md-12 my-2">
-                {!areas && <label>no storage area data</label>}
-                {areas && (
-                  <Select
-                    name={"storageArea"}
-                    value={this.state.selectedArea}
-                    label={"Select a storage zone:"}
-                    options={areas}
+            </div>
+            <span
+              className="link-primary col-6 col-md-6 text-decoration-underline"
+              onClick={this.downloadFile}
+            >
+              Download
+            </span>
+            <div className="col-12 col-md-12 my-2">
+              {!areas && <label>no storage area data</label>}
+              {areas && (
+                <Select
+                  name={"storageArea"}
+                  value={data["storageArea"]}
+                  label={"Select a storage zone:"}
+                  options={areas}
+                  onChange={this.handleChange}
+                  aria-label="Storage Area"
+                  error={this.state.errors["storageArea"]}
+                />
+              )}
+            </div>
+            <div className="col-12 col-md-12">
+              <button
+                className="btn btn-info btn-sm btn-info col-5 col-sm-5 col-md-3 my-1"
+                type="submit"
+              >
+                search
+              </button>
+              <button
+                className="btn btn-secondary btn-sm  col-5 col-sm-5 col-md-3 mx-3 my-1"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseDate"
+                aria-expanded="false"
+                aria-controls="collapseDate"
+              >
+                &gt;&gt;
+              </button>
+            </div>
+            <div className="collapse my-1" id="collapseDate">
+              <div className="card card-body">
+                <label className="card-text" htmlFor="showExpired">
+                  <input
+                    type="checkbox"
+                    id="showExpired"
+                    name="showExpired"
+                    value="show"
                     onChange={this.handleChange}
-                    aria-label="Storage Area"
-                    error={this.state.errors["storageArea"]}
                   />
-                )}
-              </div>
-              <div className="col-12 col-md-12">
-                <button
-                  className="btn btn-primary btn-sm btn-info col-5 col-md-3 my-1"
-                  type="submit"
-                >
-                  search
-                </button>
+                  &nbsp;Show Stock Expired Date
+                </label>
               </div>
             </div>
           </div>
@@ -103,7 +177,13 @@ class Inventory extends Form {
         <div className="container  border rounded bg-white my-2 p-2">
           {!stockData && <div>No Stock Data</div>}
           {stockData &&
-            stockData.map((data) => <StockRecord key={data._id} data={data} />)}
+            stockData.map((stock) => (
+              <StockRecord
+                key={stock._id}
+                data={stock}
+                showDate={data.showExpired}
+              />
+            ))}
         </div>
       </>
     );

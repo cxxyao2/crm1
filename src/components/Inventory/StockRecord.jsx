@@ -73,7 +73,7 @@ class StockRecord extends Component {
           <div className="mb-2 row">
             <label
               htmlFor="actualQty"
-              className="col-6 col-md-3 col-form-label"
+              className="col-6 col-md-3 col-form-label fw-bold"
             >
               Actual Qty
             </label>
@@ -94,25 +94,28 @@ class StockRecord extends Component {
           </div>
 
           <InfoLabel title="unit" content="barrel" />
-          <InfoLabel title="expired at" content={dateYMD(data.expiredDate)} />
-
-          <button
-            className="btn btn-info btn-sm col-5 col-md-3 mx-2 my-1"
-            onClick={(event) => {
-              event.preventDefault();
-              this.clearMessage();
-              this.setState({ readOnlyFlag: false });
-              this.qtyRef.current.focus();
-            }}
-          >
-            Edit
-          </button>
-          <button
-            className="btn btn-secondary btn-sm col-5 col-md-3 m-1"
-            onClick={this.handleSave}
-          >
-            Save
-          </button>
+          {this.props.showDate && (
+            <InfoLabel title="expired at" content={dateYMD(data.expiredDate)} />
+          )}
+          <p className="m-0 p-0">
+            <button
+              className="btn btn-info btn-sm col-5 col-md-3 mx-2 my-1"
+              onClick={(event) => {
+                event.preventDefault();
+                this.clearMessage();
+                this.setState({ readOnlyFlag: false });
+                this.qtyRef.current.focus();
+              }}
+            >
+              Edit
+            </button>
+            <button
+              className="btn btn-secondary btn-sm col-5 col-md-3 m-1"
+              onClick={this.handleSave}
+            >
+              Save
+            </button>
+          </p>
           <div className="dropdown-divider"></div>
         </div>
       </>

@@ -41,25 +41,6 @@ class Form extends Component {
     // Call the server
   };
 
-  validateProperty = ({ name, value }) => {
-    this.schema.validateAt(name, value).catch(function (err) {
-      console.log("error is ", err);
-      return err ? err.message : null;
-    });
-  };
-
-  handleChange = ({ currentTarget: input }) => {
-    const errors = { ...this.state.errors };
-    const errorMessage = this.validateProperty(input);
-    if (errorMessage) errors[input.name] = errorMessage;
-    else delete errors[input.name];
-
-    const data = { ...this.state.data };
-    data[input.name] = input.value;
-
-    this.setState({ data, errors });
-  };
-
   renderInput(name, label, type = "text") {
     return (
       <Input
