@@ -174,7 +174,7 @@ class Inventory extends Form {
             </div>
           </div>
         </form>
-        <div className="container  border rounded bg-white my-2 p-2">
+        <div className="container  border rounded bg-white my-2">
           {!stockData && <div>No Stock Data</div>}
           {stockData &&
             stockData.map((stock) => (

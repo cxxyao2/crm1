@@ -66,7 +66,7 @@ class StockRecord extends Component {
             </div>
           </div>
         )}
-        <div className="row">
+        <div className="row my-1">
           <InfoLabel title="area" content={data.area.name} />
           <InfoLabel title="item" content={data.product.name} />
           <InfoLabel title="qty" content={data.quantity} />
@@ -116,7 +116,7 @@ class StockRecord extends Component {
               Save
             </button>
           </p>
-          <div className="dropdown-divider"></div>
+          <hr />
         </div>
       </>
     );
