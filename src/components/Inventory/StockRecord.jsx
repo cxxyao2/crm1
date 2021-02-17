@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import InfoLabel from "../InfoLabel";
 import { dateYMD } from "../../utils/dateFormat";
 import service from "../../services/stockService";
-import axios from "axios";
+import "./StockRecord.css";
 
 class StockRecord extends Component {
   constructor(props) {
@@ -110,7 +110,7 @@ class StockRecord extends Component {
               Edit
             </button>
             <button
-              className="btn btn-secondary btn-sm col-5 col-md-3 m-1"
+              className="btn btn-light border btn-sm col-5 col-md-3 m-1"
               onClick={this.handleSave}
             >
               Save
