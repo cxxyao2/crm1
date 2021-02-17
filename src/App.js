@@ -6,12 +6,13 @@ import LoginForm from "./components/Auth/LoginForm";
 import Inventory from "./components/Inventory/Inventory";
 import Popup from "./components/Popup";
 import Homepage from "./components/Homepage";
+import Channel from "./components/Channel";
 
 function App() {
   // return <Tabs />;
   return (
     <div className="container bg-white  ">
-      <Homepage />
+      <Inventory />
     </div>
   );
 }

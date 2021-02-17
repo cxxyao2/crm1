@@ -99,7 +99,7 @@ class StockRecord extends Component {
           )}
           <p className="m-0 p-0">
             <button
-              className="btn btn-info btn-sm col-5 col-md-3 mx-2 my-1"
+              className="btn btn-primary col-5 col-md-3 mx-2 my-1"
               onClick={(event) => {
                 event.preventDefault();
                 this.clearMessage();
@@ -110,7 +110,7 @@ class StockRecord extends Component {
               Edit
             </button>
             <button
-              className="btn btn-light border btn-sm col-5 col-md-3 m-1"
+              className="btn btn-secondary border col-5 col-md-3 m-1"
               onClick={this.handleSave}
             >
               Save

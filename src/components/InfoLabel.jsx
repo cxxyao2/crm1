@@ -4,6 +4,7 @@ function InfoLabel(props) {
   return (
     <>
       <div className="col-6 col-md-3 text-capitalize fw-bold">
+       
         {props.title}
       </div>
       <div className="col-6 col-md-3 ">

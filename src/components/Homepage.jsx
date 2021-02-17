@@ -109,7 +109,7 @@ function Homepage(props) {
             <div className="col-md-4 col-12 mt-2 ">
               <div className="card" style={{ width: "100%" }}>
                 <div className="card-body">
-                  <h5 className="card-title">Card title</h5>
+                  <h5 className="card-title fw-bold">Card title</h5>
                   <img
                     src={tree1}
                     className="card-img-top"

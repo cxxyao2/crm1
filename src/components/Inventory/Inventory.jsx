@@ -118,13 +118,22 @@ class Inventory extends Form {
           <div className="container  border rounded bg-white my-2 p-2">
             <div className="col-12 col-md-12 fw-bold">Inventory Keeping</div>
             <div className="row">
-              <InfoLabel title={"Date"} content={getTodayYMD()} />
+              <InfoLabel title={"Date"} content={getTodayYMD()}>
+                <i
+                  className="fa fa-calendar"
+                  style={{ fontSize: "1rem", color: "orange" }}
+                ></i>
+              </InfoLabel>
               <InfoLabel title={"Operator"} content={userName} />
             </div>
             <span
               className="link-primary col-6 col-md-6 text-decoration-underline"
               onClick={this.downloadFile}
             >
+              <i
+                className="fa fa-cloud-download"
+                style={{ fontSize: "1rem", color: "blue" }}
+              ></i>
               Download
             </span>
             <div className="col-12 col-md-12 my-2">
@@ -143,13 +152,13 @@ class Inventory extends Form {
             </div>
             <div className="col-12 col-md-12">
               <button
-                className="btn btn-info btn-sm btn-info col-5 col-sm-5 col-md-3 my-1"
+                className="btn btn-primary  col-5 col-sm-5 col-md-3 my-1"
                 type="submit"
               >
                 search
               </button>
               <button
-                className="btn btn-secondary btn-sm  col-5 col-sm-5 col-md-3 mx-3 my-1"
+                className="btn btn-secondary   col-5 col-sm-5 col-md-3 mx-3 my-1"
                 data-bs-toggle="collapse"
                 data-bs-target="#collapseDate"
                 aria-expanded="false"
