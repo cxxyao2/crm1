@@ -116,7 +116,7 @@ class Inventory extends Form {
       <>
         <form onSubmit={this.handleSubmit}>
           <div className="container  border rounded bg-white my-2 p-2">
-            <div className="col-12 col-md-12 fw-bold">Inventory Keeping</div>
+            <div className=" col-12 my-2  py-2 bg-light fw-bold">Inventory Keeping</div>
             <div className="row">
               <InfoLabel title={"Date"} content={getTodayYMD()}>
                 <i

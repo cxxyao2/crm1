@@ -6,7 +6,7 @@ class Channel extends Component {
     const { userName } = this.props;
     return (
       <div className="container border rounded">
-        <div className="shadow-sm row mb-3 py-1bg-light">
+        <div className="shadow-sm row mb-3 py-1 bg-light">
           <h5>Channel Registration</h5>
         </div>
         <form>

@@ -7,12 +7,14 @@ import Inventory from "./components/Inventory/Inventory";
 import Popup from "./components/Popup";
 import Homepage from "./components/Homepage";
 import Channel from "./components/Channel";
+import PlaceOrder from "./components/Order/PlaceOrder";
+import OrderDetails from "./components/Order/OrderDetails";
 
 function App() {
   // return <Tabs />;
   return (
-    <div className="container bg-white  ">
-      <Inventory />
+    <div className="container bg-white " id="topDiv">
+      <OrderDetails />
     </div>
   );
 }
