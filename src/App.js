@@ -9,12 +9,13 @@ import Homepage from "./components/Homepage";
 import Channel from "./components/Channel";
 import PlaceOrder from "./components/Order/PlaceOrder";
 import OrderDetails from "./components/Order/OrderDetails";
+import PDFSave from "./components/PDFPrint/PDFSave";
 
 function App() {
   // return <Tabs />;
   return (
     <div className="container bg-white " id="topDiv">
-      <OrderDetails />
+      <PDFSave />
     </div>
   );
 }
