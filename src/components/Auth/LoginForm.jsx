@@ -5,7 +5,7 @@ import Form from "../Form";
 import auth from "../../services/authservice";
 import { Redirect } from "react-router-dom";
 import "./LoginForm.css";
-import tree1 from "../../images/autraliaoil@1x.jpg";
+import loginImage from "../../images/gas.png";
 
 class LoginForm extends Form {
   state = {
@@ -45,22 +45,7 @@ class LoginForm extends Form {
       <>
         <div className="position-relative loginForm_container">
           <div className="border rounded loginForm_main px-2 pb-4 col-md-8 col-12">
-            <img
-              alt="item"
-              src={tree1}
-              style={{
-                position: "absolute",
-                top: "-50px",
-                width: "100px",
-                height: "100px",
-                border: "1px solid #fd7e14",
-                boxShadow: "0px 0px 2px #fd7e14 ",
-                borderRadius: "100%",
-                zIndex: "3",
-                left: "50%",
-                transform: "translateX(-50%)",
-              }}
-            />
+            <img alt="item" src={loginImage} className="loginImage" />
 
             <p className="loginForm_floatMenu">
               <label className="float-begin fw-bold">Sign In</label>

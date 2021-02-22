@@ -1,14 +1,14 @@
-import http from '../services/httpService';
+import http from "../services/httpService";
 import { apiUrl } from "../config/config.json";
-import jwtDecode from 'jwt-decode';
+import jwtDecode from "jwt-decode";
 
 const apiEndpoint = apiUrl + "/auth";
-const tokenKey="token";
+const tokenKey = "token";
 
 http.setJwt(getJwt());
 
 export async function login(email, password) {
-  const  {data: jwt } = await  http.post(apiEndpoint, {email, password});
+  const { data: jwt } = await http.post(apiEndpoint, { email, password });
 
   localStorage.setItem(tokenKey, jwt);
 }
@@ -34,10 +34,23 @@ export function getJwt() {
   return localStorage.getItem(tokenKey);
 }
 
-export default {
+export async function sendResetEmail(email) {
+  let emailEndPoint = apiEndpoint.concat("/send-reset-email");
+  return await http.post(emailEndPoint, { email });
+}
+
+export async function resetPassword(newPassword) {
+  let emailEndPoint = apiEndpoint.concat("/reset-password");
+  return await http.post(emailEndPoint, { newPassword });
+}
+
+const auth = {
   login,
   logout,
   getCurrentUser,
   loginWithJwt,
-  getJwt
+  getJwt,
+  sendResetEmail,
+  resetPassword,
 };
+export default auth;

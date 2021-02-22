@@ -15,3 +15,17 @@
   position: relative !important;
   top: 2rem;
 }
+
+.loginImage {
+  position: absolute !important;
+  top: -50px;
+  width: 100px;
+  height: 100px;
+  border: 1px solid #fd7e14;
+  background-color: coral;
+  box-shadow: 0px 0px 2px #fd7e14;
+  border-radius: 100%;
+  z-index: 9999;
+  left: 50%;
+  transform: translateX(-50%);
+}
