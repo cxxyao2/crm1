@@ -39,8 +39,8 @@ export async function sendResetEmail(email) {
   return await http.post(emailEndPoint, { email });
 }
 
-export async function resetPassword(newPassword) {
-  let emailEndPoint = apiEndpoint.concat("/reset-password");
+export async function resetPassword(token, newPassword) {
+  let emailEndPoint = apiEndpoint.concat(`/reset-password?token=${token}`);
   return await http.post(emailEndPoint, { newPassword });
 }
 

@@ -8,12 +8,16 @@ class ResetPassword extends Form {
   state = {
     data: { password: "", repeat_password: "" },
     errors: {},
-    sendStatus: 0, //0 not commit; 1 failed; 2 succeeded
+    sendStatus: 0, //0 not submit; 1 failed; 2 succeeded
     sendResultMessage: "",
+    showPasswordNoMatch: false,
   };
 
+  noMatchErrorMessage = "password' and 'repeat password' don't match";
   // password: 1 uppercase 1 lowercase 1 num 1 special sign
-  // TODO password === repeat_password
+  // TODO get resetToken from URL
+  resetToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Ijg4ODg4ODg4QGdtYWlsLmNvbSIsImlhdCI6MTYxNDAzMDkzMH0._hsHZihb4mNchPGQ40D1VGaqgb16TRMt7e4ueMrl4Ns";
   schema = {
     password: Joi.string()
       .required()
@@ -26,9 +30,19 @@ class ResetPassword extends Form {
   handleSubmit = (e) => {
     e.preventDefault();
     const errors = this.validate();
+    this.setState({ sendStatus: 0, sendResultMessage: "" });
     this.setState({ errors: errors || {} });
     if (errors) {
       console.log(errors);
+      return;
+    }
+
+    const { password, repeat_password } = this.state.data;
+    this.setState({ showPasswordNoMatch: false });
+    if (password && repeat_password && password === repeat_password) {
+    } else {
+      console.log("hi,show", password, "  repeat   ", repeat_password);
+      this.setState({ showPasswordNoMatch: true });
       return;
     }
 
@@ -38,10 +52,13 @@ class ResetPassword extends Form {
   doSubmit = async () => {
     try {
       const { data } = this.state;
-      const { data: okMessage } = await auth.resetPassword(data.newPassword);
+      const { data: okMessage } = await auth.resetPassword(
+        this.resetToken,
+        data.password
+      );
       this.setState({ sendStatus: 2, sendResultMessage: okMessage });
     } catch (ex) {
-      if (ex.response && ex.response.code === 400) {
+      if (ex.response && ex.response.status === 400) {
         this.setState({ sendStatus: 1, sendResultMessage: ex.response.data });
       } else {
         let exceptionError = "Exception Error happened: ".concat(ex.message);
@@ -58,9 +75,11 @@ class ResetPassword extends Form {
     if (!result.error) return null;
 
     const errors = {};
-    result.error.details.forEach((detail) => {
-      errors[detail.path[0]] = detail.message;
-    });
+    if (result.error) {
+      result.error.details.forEach((detail) => {
+        errors[detail.path[0]] = detail.message;
+      });
+    }
 
     return errors;
   };
@@ -74,6 +93,8 @@ class ResetPassword extends Form {
 
   handleChange = ({ currentTarget: input }) => {
     const errors = { ...this.state.errors };
+    this.setState({ showPasswordNoMatch: false });
+    this.setState({ sendStatus: 0, sendResultMessage: "" });
     const errorMessage = this.validateProperty(input);
     if (errorMessage) errors[input.name] = errorMessage;
     else delete errors[input.name];
@@ -85,7 +106,7 @@ class ResetPassword extends Form {
   };
 
   render() {
-    const { sendStatus, sendResultMessage } = this.state;
+    const { sendStatus, sendResultMessage, showPasswordNoMatch } = this.state;
     return (
       <>
         <div className="container col-8 col-md-8 my-3 border rounded">
@@ -103,6 +124,11 @@ class ResetPassword extends Form {
 
               {this.renderButton("Submit")}
             </form>
+          )}
+          {showPasswordNoMatch && (
+            <div className="alert alert-warning" role="alert">
+              {this.noMatchErrorMessage}
+            </div>
           )}
           {sendStatus === 1 && (
             <div className="alert alert-warning" role="alert">
