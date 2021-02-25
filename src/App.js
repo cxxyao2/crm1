@@ -12,12 +12,13 @@ import OrderDetails from "./components/Order/OrderDetails";
 import PDFSave from "./components/PDFPrint/PDFSave";
 import SendResetEmail from "./components/Auth/SendResetEmail";
 import ResetPassword from "./components/Auth/ResetPassword";
+import FileDownload from "./components/FileDownload";
 
 function App() {
   // return <Tabs />;
   return (
     <div className="container bg-white my-3 p-3" id="topDiv">
-      <ResetPassword />
+      <FileDownload />
     </div>
   );
 }
