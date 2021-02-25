@@ -1,4 +1,7 @@
 import "./App.css";
+import React, { Component } from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import LocationUpload from "./components/LocationUpload";
 import Avatar from "./components/avatar/Avatar";
 import VisitCustomerForm from "./components/VisitCustomerForm";
@@ -14,13 +17,16 @@ import SendResetEmail from "./components/Auth/SendResetEmail";
 import ResetPassword from "./components/Auth/ResetPassword";
 import FileDownload from "./components/FileDownload";
 
-function App() {
-  // return <Tabs />;
-  return (
-    <div className="container bg-white my-3 p-3" id="topDiv">
-      <FileDownload />
-    </div>
-  );
+class App extends Component {
+  state = {};
+
+  render() {
+    return (
+      <main className="container bg-white my-3 p-3" id="topDiv">
+        <LoginForm />
+      </main>
+    );
+  }
 }
 
 export default App;
