@@ -1,13 +1,13 @@
 import React from "react";
 import * as yup from "yup";
 import _ from "lodash";
-import Form from "./Form";
-import * as userService from "../services/userService";
-import { dateYMD, getTodayYMD } from "../utils/fileTypeConvert";
+import Form from "../Form";
+import * as userService from "../../services/userService";
+import { dateYMD, getTodayYMD } from "../../utils/dateFormat";
 import * as itineraryService from "../../services/itineraryservice";
-import ItinerariesTable from "../components/table/ItinerariesTable";
-import Pagination from "./common/pagination";
-import { paginate } from "../utils/paginate";
+import ItinerariesTable from "./ItinerariesTable";
+import Pagination from "../common/pagination";
+import { paginate } from "../../utils/paginate";
 import MultiLocationForm from "./MultiLocationForm";
 import RechartCom from "./RechartCom";
 

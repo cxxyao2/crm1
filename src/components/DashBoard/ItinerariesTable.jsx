@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Table from "./table";
+import Table from "../Table/Table";
 
 class ItinerariesTable extends Component {
   columns = [

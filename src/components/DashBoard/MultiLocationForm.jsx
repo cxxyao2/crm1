@@ -1,7 +1,7 @@
 // ok
 import React, { Component } from "react";
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react";
-import { impK } from "../../config/config.json";
+import { myMapKey } from "../../config/config.json";
 
 // const mapStyles = {
 //   width: '100%',
@@ -77,5 +77,5 @@ class MultiLocationForm extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: impK,
+  apiKey: myMapKey,
 })(MultiLocationForm);

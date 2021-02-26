@@ -16,18 +16,19 @@ import Inventory from "./components/Inventory/Inventory";
 import LocationUpload from "./components/LocationUpload";
 import LoginForm from "./components/Auth/LoginForm";
 import LogoutForm from "./components/Auth/LogoutForm";
-import NotFound from "../../../tutorials_frontend/react17-mosh/src/components/notFound";
+import NotFound from "./components/NotFound";
 import OrderDetails from "./components/Order/OrderDetails";
 import PlaceOrder from "./components/Order/PlaceOrder";
 import PDFSave from "./components/PDFPrint/PDFSave";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import ResetPassword from "./components/Auth/ResetPassword";
-import RegisterForm from "../../../tutorials_frontend/react17-mosh/src/forms/RegisterForm";
+import RegisterForm from "./components/Auth/RegisterForm";
 import SendResetEmail from "./components/Auth/SendResetEmail";
-import SideDrawer from "./components/SideDrawer";
+import SideDrawer from "./components/SideDrawer/SideDrawer";
 import Toolbar from "./components/Toolbar/Toolbar";
 import VisitCustomerForm from "./components/VisitCustomerForm";
 import VisitReports from "./components/DashBoard/VisitReports";
+import FooterBar from "./components/Toolbar/FooterBar";
 
 const store = configureStore();
 class App extends Component {
@@ -69,7 +70,7 @@ class App extends Component {
               click={this.backdropClickHandler}
             />
             {backdrop}
-            <main className="container bg-white my-3 p-3" id="topDiv">
+            <main className="container bg-white my-2 p-2" id="topDiv">
               <Switch>
                 <Route exact path="/">
                   <Homepage />
@@ -112,12 +113,13 @@ class App extends Component {
                 <Route path="/not-found">
                   <NotFound />
                 </Route>
-                <Route path="/">
-                  <Redirect to="/home" />
+                <Route path="/home">
+                  <Redirect to="/" />
                 </Route>
                 <Redirect to="/not-found" />
               </Switch>
             </main>
+            <FooterBar />
           </div>
         </Provider>
       </>
