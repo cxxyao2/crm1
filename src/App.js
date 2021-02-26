@@ -10,6 +10,7 @@ import Backdrop from "./components/Backdrop/Backdrop";
 import configureStore from "./store/configureStore";
 
 import Channel from "./components/Channel";
+import Carousel from "./Deleting/Carousel";
 import FileDownload from "./components/FileDownload";
 import Homepage from "./components/Homepage";
 import Inventory from "./components/Inventory/Inventory";

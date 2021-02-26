@@ -7,10 +7,12 @@ import "./FooterBar.css";
 class FooterBar extends Component {
   render() {
     return (
-      <footer className="footer-bar">
-        <div className="d-flex text-white  justify-content-center align-item-center">
-          <div>XIXI 2021</div>
-        </div>
+      <footer className="footer_bar">
+        <address>
+          Written by <a href="mailto:web@example.com">Jennifer</a>
+          <br />
+          Canada.2021
+        </address>
       </footer>
     );
   }

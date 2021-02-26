@@ -1,8 +1,10 @@
-.footer-bar {
+.footer_bar {
   bottom: 0;
   left: 0;
   width: 100%;
   background: rgb(27, 0, 113);
   height: 56px;
   z-index: 150;
+  text-align: center;
+  color: white;
 }
