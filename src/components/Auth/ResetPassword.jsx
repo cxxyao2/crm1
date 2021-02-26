@@ -5,27 +5,28 @@ import Form from "../Form";
 import auth from "../../services/authservice";
 
 class ResetPassword extends Form {
-  state = {
-    data: { password: "", repeat_password: "" },
-    errors: {},
-    sendStatus: 0, //0 not submit; 1 failed; 2 succeeded
-    sendResultMessage: "",
-    showPasswordNoMatch: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: { password: "", repeat_password: "" },
+      errors: {},
+      sendStatus: 0, //0 not submit; 1 failed; 2 succeeded
+      sendResultMessage: "",
+      showPasswordNoMatch: false,
+    };
+    this.resetToken = this.props.match.params.token; // http://xxx.xxx.xxx.xxx:300/xxx?token=xxxx  TODO 需要验证是否正确
 
-  noMatchErrorMessage = "password' and 'repeat password' don't match";
-  // password: 1 uppercase 1 lowercase 1 num 1 special sign
-  // TODO get resetToken from URL
-  resetToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Ijg4ODg4ODg4QGdtYWlsLmNvbSIsImlhdCI6MTYxNDAzMDkzMH0._hsHZihb4mNchPGQ40D1VGaqgb16TRMt7e4ueMrl4Ns";
-  schema = {
-    password: Joi.string()
-      .required()
-      .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^ws]).{8,}$/),
-    repeat_password: Joi.string()
-      .required()
-      .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^ws]).{8,}$/),
-  };
+    // password: 1 uppercase 1 lowercase 1 num 1 special sign
+    this.schema = {
+      password: Joi.string()
+        .required()
+        .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^ws]).{8,}$/),
+      repeat_password: Joi.string()
+        .required()
+        .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^ws]).{8,}$/),
+    };
+    this.noMatchErrorMessage = "password' and 'repeat password' don't match";
+  }
 
   handleSubmit = (e) => {
     e.preventDefault();

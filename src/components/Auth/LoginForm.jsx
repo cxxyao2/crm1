@@ -3,7 +3,7 @@ import Joi from "joi-browser";
 
 import Form from "../Form";
 import auth from "../../services/authservice";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import "./LoginForm.css";
 import loginImage from "../../images/gas.png";
 
@@ -49,9 +49,9 @@ class LoginForm extends Form {
 
             <div className="loginForm_floatMenu">
               <label className="float-begin fw-bold">Sign In</label>
-              <label className="float-end fw-bold text-color-coral">
-                Create Account?
-              </label>
+              <span className="float-end fw-bold text-color-coral">
+                <Link to="/register"> Create Account? </Link>
+              </span>
             </div>
 
             <div className="loginForm_floatMenu clearfix">
@@ -71,12 +71,17 @@ class LoginForm extends Form {
                   </div>
                 </div>
                 <div className="col-6 col-md-6 text-end">
-                  <label>Forget Password?</label>
+                  <span>
+                    <Link to="/send-reset-password-email">
+                      Forget Password?
+                    </Link>
+                  </span>
                 </div>
                 {this.renderButton("Sign In")}
               </form>
             </div>
 
+            {/* TODO google,twitter,facebook login  */}
             <div className="loginForm_floatMenu  row justify-content-center my-4">
               <div className="hr-divider">
                 <span className="hr-innertext">or</span>
