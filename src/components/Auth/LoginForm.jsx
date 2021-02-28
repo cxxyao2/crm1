@@ -87,13 +87,13 @@ class LoginForm extends Form {
                 <span className="hr-innertext">or</span>
               </div>
               <span className="fb btn col-11 col-md-8 mt-4 mb-2">
-                <i class="fa fa-facebook fa-fw"></i> Login with Facebook
+                <i className="fa fa-facebook fa-fw"></i> Login with Facebook
               </span>
               <span className="twitter btn  col-11 col-md-8 my-2">
-                <i class="fa fa-twitter fa-fw"></i> Login with Twitter
+                <i className="fa fa-twitter fa-fw"></i> Login with Twitter
               </span>
               <span className="google btn  col-11 col-md-8 my-2">
-                <i class="fa fa-google fa-fw"></i> Login with Google
+                <i className="fa fa-google fa-fw"></i> Login with Google
               </span>
             </div>
           </div>

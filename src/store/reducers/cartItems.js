@@ -35,12 +35,13 @@ export default slice.reducer;
 // () => fn(dispatch,getState)
 const url = "/orders";
 
+// save to db and clear the cart from store
 export const addItem = (item) =>
   apiCallBegan({
     url,
     method: "post",
     data: item,
-    onSuccess: itemAdded.type,
+    onSuccess: itemMoved.type,
   });
 
 export const getItems = createSelector(

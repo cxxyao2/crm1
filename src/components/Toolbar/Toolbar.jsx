@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import "./Toolbar.css";
 import DrawerToggleButton from "../SideDrawer/DrawerToggleButton";
 import { connect } from "react-redux";
+import logo1 from "../../images/gas.png";
 
 class Toolbar extends Component {
   render() {
@@ -14,7 +15,7 @@ class Toolbar extends Component {
             <DrawerToggleButton click={this.props.drawerClickHandler} />
           </div>
           <div className="toolbar_logo">
-            <a href="/">THE LOGO</a>
+            <a href="/">Oil</a>
           </div>
           <div className="spacer"></div>
           <div className="toolbar_navigation-items">
@@ -23,20 +24,32 @@ class Toolbar extends Component {
                 <Link to="/orders">Orders</Link>
               </li>
               <li>
-                <Link to="/routes">Routes</Link>
+                <Link to="/routes">Visits</Link>
+              </li>
+              <li>
+                <Link to="/channels">Channels</Link>
               </li>
               <li>
                 <Link to="/clients">Clients</Link>
               </li>
-              <li>
-                <Link to="/channels">Channels</Link>
+              <li className="iconUp">
+                <Link to="/login">
+                  Sign In
+                  <i
+                    className="fa fa-user"
+                    style={{
+                      fontSize: "2rem",
+                      color: "white",
+                    }}
+                  ></i>
+                </Link>
               </li>
               <li onClick={() => console.log("click car")}>
                 <i
                   className="fa fa-shopping-cart"
                   style={{
                     fontSize: "2rem",
-                    color: "white",
+                    color: "coral",
                     position: "relative",
                     left: "2px",
                     top: "0",
@@ -46,9 +59,11 @@ class Toolbar extends Component {
                 <span
                   className="badge badge-warning"
                   style={{
-                    fontSize: "1em",
+                    fontSize: "1rem",
                     position: "relative",
-                    top: "-10px",
+                    top: "-15px",
+                    left: "-8px",
+                    color: "coral",
                   }}
                 >
                   {(this.props.items && this.props.items.length) || 0}

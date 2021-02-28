@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "../actions/apiAction";
 import moment from "moment";
+import { createSelector } from "reselect";
 
 // Reducer
 const slice = createSlice({
@@ -44,7 +45,7 @@ const url = "products";
 
 // An action is a function, () => fn(dispatch, getState)
 export const loadProducts = () => (dispatch, getState) => {
-  const { lastFetch } = getState().entities.customers;
+  const { lastFetch } = getState().entities.products;
 
   const diffInMinutes = moment().diff(moment(lastFetch), "minutes");
   if (diffInMinutes < 10) return;
@@ -58,3 +59,12 @@ export const loadProducts = () => (dispatch, getState) => {
   );
 };
 
+
+export const getFilteredProducts = (filterKey) =>
+  createSelector(
+    (state) => state.entities.products,
+    (products) =>
+      products.filter((product) =>
+        product.name.toLowerCase().includes(filterKey.toLowerCase())
+      )
+  );

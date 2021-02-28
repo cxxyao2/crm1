@@ -30,6 +30,7 @@ import Toolbar from "./components/Toolbar/Toolbar";
 import VisitCustomerForm from "./components/VisitCustomerForm";
 import VisitReports from "./components/DashBoard/VisitReports";
 import FooterBar from "./components/Toolbar/FooterBar";
+import DataList from "./components/common/DataList";
 
 const store = configureStore();
 class App extends Component {
@@ -71,10 +72,10 @@ class App extends Component {
               click={this.backdropClickHandler}
             />
             {backdrop}
-            <main className="container bg-white my-2 p-2" id="topDiv">
+            <main className="container  bg-white my-2 p-2" id="topDiv">
               <Switch>
                 <Route exact path="/">
-                  <Homepage />
+                  <DataList />
                 </Route>
                 <Route
                   path="/activities"

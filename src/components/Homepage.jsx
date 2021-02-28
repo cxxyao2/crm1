@@ -1,9 +1,14 @@
 import React from "react";
-import tree1 from "../images/autraliaoil@1x.jpg";
+import cardImage from "../images/fork_1x.jpg";
 
 function Homepage(props) {
   const carouselItemClass = (index) => {
     return index === 0 ? "carousel-item active" : "carousel-item";
+  };
+
+  const getImageFile = (index) => {
+    let image = require(`../images/series${index}.jpg`);
+    return image.default;
   };
 
   return (
@@ -22,7 +27,7 @@ function Homepage(props) {
                   key={member.concat(index)}
                 >
                   <img
-                    src={tree1}
+                    src={getImageFile(index + 1)}
                     className="d-block w-100"
                     alt="..."
                     style={{ maxHeight: "200px", objectFit: "cover" }}
@@ -71,7 +76,7 @@ function Homepage(props) {
                 <div className="card-body">
                   <h5 className="card-title fw-bold">Card title</h5>
                   <img
-                    src={tree1}
+                    src={cardImage}
                     className="card-img-top"
                     style={{ maxHeight: "200px", objectFit: "cover" }}
                     alt="..."

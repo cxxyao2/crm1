@@ -3,7 +3,7 @@ import { getTodayYMD } from "../../utils/dateFormat";
 import InfoLabel from "../InfoLabel";
 import StockRecord from "./StockRecord";
 import service from "../../services/stockService";
-import areaService from "../../services/stockareaService";
+import areaService from "../../services/masterDataService";
 import Joi from "joi-browser";
 import Select from "../Select";
 import { saveBlobtoLocalFile, makeCSV } from "../../utils/fileTypeConvert";

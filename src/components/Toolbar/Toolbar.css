@@ -38,6 +38,22 @@
   padding: 0 0.5rem;
 }
 
+.toolbar_navigation-items .iconUp {
+  position: relative !important;
+  top: -10px;
+}
+
+.loginIcon {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  border: 1px solid var(--bs-white);
+  background-color: var(--bs-white);
+  box-shadow: 0px 0px 2px var(--bs-orange);
+}
+
 .toolbar_navigation-items a {
   color: white;
   text-decoration: none;
