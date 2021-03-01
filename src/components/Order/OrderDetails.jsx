@@ -1,13 +1,65 @@
 import React, { useEffect, useState } from "react";
 import tree1 from "../../images/autraliaoil@1x.jpg";
+import CustomerInfo from "./CustomerInfo";
 import "./OrderDetails.css";
+import { useDispatch, useSelector } from "react-redux";
+
+import { itemMoved, addItem, getItems } from "../../store/reducers/cartItems";
 
 function OrderDetails(props) {
-  const [offset, setOffset] = useState(false);
+  const dispatch = useDispatch();
+  const [items, setItems] = useState(useSelector(getItems));
+
+  const [offset, setOffset] = useState(false); // show back to top button
+  const [subtotalQty, setSubtotalQty] = useState(0);
+  const [subtotalPrice, setSubtotalPrice] = useState(0);
+
+  const [saveFlag, setSaveFlag] = useState(0); // 1 failed 2 succeed 0 not save
+  const [errMsg, setErrMsg] = useState("");
+  const succeedMessage = "Data is saved successfully.";
+
+  const { customer } = props;
 
   const handleClick = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
+  };
+
+  const getSum = (items) => {
+    let sumQty = items.reduce(function (total, item) {
+      return total + item.qty;
+    }, 0);
+    let sumPrice = items.reduce(function (total, item) {
+      return total + item.qty * item.price;
+    }, 0);
+    setSubtotalQty(sumQty);
+    setSubtotalPrice(sumPrice);
+  };
+
+  const onSubmit = () => {
+    try {
+      handleSubmit();
+      setSaveFlag(2);
+      setItems(undefined);
+    } catch (err) {
+      setSaveFlag(1);
+      
+      if (err && err.response.status === 400) setErrMsg(err.response.data);
+      console.log("err", err.response.data);
+    }
+  };
+  const handleSubmit = async () => {
+    await items.map((item) => dispatch(addItem(item)));
+  };
+
+  const handleDelete = (deleted) => {
+    const index = items.findIndex(
+      (item) => item.productId === deleted.productId
+    );
+    let newItems = [...items];
+    newItems.splice(index, 1);
+    setItems(newItems);
+    dispatch(itemMoved(deleted));
   };
 
   useEffect((_) => {
@@ -27,14 +79,15 @@ function OrderDetails(props) {
     <div className="container m-0 p-0 " id="detailsTop">
       <div className="row my-1 border-bottom border-2 ">
         <h5>Order details</h5>
-
-        <label className="fs-6 col-12 col-md-6">Client Name: Mike</label>
-        <label className="fs-6 col-12 col-md-6">
-          Address: 145 rue avenue luxe
-        </label>
+        <CustomerInfo customer={customer} />
       </div>
-      <form>
-        {[1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12].map((data, index) => (
+      {saveFlag === 1 && <div>{errMsg}</div>}
+      {saveFlag === 2 && <div>{succeedMessage}</div>}
+      <form onSubmit={onSubmit}>
+        {(!items || items.length <= 0) && (
+          <div className="alert alert-info">Cart is empty.</div>
+        )}
+        {items.map((record, index) => (
           <div className="row g-1 my-1" key={index}>
             <div className="col-sm-3 col-3">
               <img
@@ -45,30 +98,40 @@ function OrderDetails(props) {
               />
             </div>
             <div className="col-sm-4 col-4">
-              <p className="lh-sm fs-6">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam
-                dolor error pariatur voluptates fugiat possimus explicabo
-                veritatis. Rerum, id neque.
-              </p>
+              <p className="lh-sm fs-6">{record.product.name}</p>
             </div>
             <div className="col-sm-5 col-5 fs-6">
-              <label className="fw-bold">Price:&nbsp;$12</label>
+              <label className="fw-bold">Price:&nbsp;{record.price}</label>
               <div className="input-group">
                 <div className="input-group-text">Qty:&nbsp;</div>
                 <input
                   type="number"
                   className="form-control"
                   id="inlineFormInputGroupUsername"
-                  placeholder="1111"
+                  defaultValue={record.qty}
                   style={{ textOverflow: "ellipsis" }}
                 />
               </div>
+              <button
+                className="btn btn-sm btn-primary"
+                onClick={() => handleDelete(record)}
+              >
+                delete
+              </button>
             </div>
             <hr />
           </div>
         ))}
         <div className="d-flex justify-content-end">
-          Subtotal(4 items):<label className="fw-bold"> $12.34 </label>
+          <p>
+            Subtotal( {subtotalQty} items):
+            <label className="fw-bold"> ${subtotalPrice} </label>
+          </p>
+          <p>
+            <button className="btn btn-primary" type="submit">
+              Submit
+            </button>
+          </p>
         </div>
       </form>
       {offset && (

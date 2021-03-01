@@ -11,7 +11,9 @@ import configureStore from "./store/configureStore";
 
 import Channel from "./components/Channel";
 import Carousel from "./Deleting/Carousel";
+import DataList from "./components/common/DataList";
 import FileDownload from "./components/FileDownload";
+import FooterBar from "./components/Toolbar/FooterBar";
 import Homepage from "./components/Homepage";
 import Inventory from "./components/Inventory/Inventory";
 import LocationUpload from "./components/LocationUpload";
@@ -29,8 +31,6 @@ import SideDrawer from "./components/SideDrawer/SideDrawer";
 import Toolbar from "./components/Toolbar/Toolbar";
 import VisitCustomerForm from "./components/VisitCustomerForm";
 import VisitReports from "./components/DashBoard/VisitReports";
-import FooterBar from "./components/Toolbar/FooterBar";
-import DataList from "./components/common/DataList";
 
 const store = configureStore();
 class App extends Component {
@@ -89,6 +89,9 @@ class App extends Component {
                 </Route>
                 <Route path="/orders" exact>
                   <PlaceOrder />
+                </Route>
+                <Route path="/order-details" exact>
+                  <OrderDetails />
                 </Route>
                 <ProtectedRoute path="/stock">
                   <Inventory />

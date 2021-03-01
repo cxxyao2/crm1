@@ -44,33 +44,35 @@ class Toolbar extends Component {
                   ></i>
                 </Link>
               </li>
-              <li onClick={() => console.log("click car")}>
-                <i
-                  className="fa fa-shopping-cart"
-                  style={{
-                    fontSize: "2rem",
-                    color: "coral",
-                    position: "relative",
-                    left: "2px",
-                    top: "0",
-                  }}
-                />
+              {this.props.items && this.props.items.length >= 1 && (
+                <li onClick={() => this.props.history.push("/order-details")}>
+                  <i
+                    className="fa fa-shopping-cart"
+                    style={{
+                      fontSize: "2rem",
+                      color: "coral",
+                      position: "relative",
+                      left: "2px",
+                      top: "0",
+                    }}
+                  />
 
-                <span
-                  className="badge badge-warning"
-                  style={{
-                    fontSize: "1rem",
-                    position: "relative",
-                    top: "-15px",
-                    left: "-8px",
-                    color: "coral",
-                  }}
-                >
-                  {(this.props.items && this.props.items.length) || 0}
-                </span>
+                  <span
+                    className="badge badge-warning"
+                    style={{
+                      fontSize: "1rem",
+                      position: "relative",
+                      top: "-15px",
+                      left: "-8px",
+                      color: "coral",
+                    }}
+                  >
+                    {this.props.items.length}
+                  </span>
 
-                <span style={{ display: "none" }}>unread messages</span>
-              </li>
+                  <span style={{ display: "none" }}> TODO unread messages</span>
+                </li>
+              )}
             </ul>
           </div>
         </nav>

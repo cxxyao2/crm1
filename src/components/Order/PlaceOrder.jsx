@@ -10,6 +10,8 @@ import { paginate } from "../../utils/paginate";
 import Pagination from "../common/pagination";
 import _ from "lodash";
 import PlaceOrderProduct from "./PlaceOrderProduct";
+import DataList from "../common/DataList";
+import CustomerInfo from "./CustomerInfo";
 
 class PlaceOrder extends Component {
   constructor(props) {
@@ -17,6 +19,7 @@ class PlaceOrder extends Component {
     this.pageSize = 7;
     this.state = {
       filteredProduct: undefined,
+      selectedCustomer: undefined,
       currentPage: 1,
       sortPath: { column: "name", order: "asc" },
     };
@@ -30,14 +33,25 @@ class PlaceOrder extends Component {
     this.setState({ filteredProduct });
   };
 
-  getImageFile = (productOrder) => {
-    let index = productOrder % 7;
-    let image = require(`../../images/motor${index}.jpg`);
-    return image.default;
+  showCustomer = (selectedCustomer) => {
+    this.setState({ selectedCustomer });
   };
 
   handlePageChange = (page) => {
     this.setState({ currentPage: page });
+  };
+
+  handleAddItem = (product, qty) => {
+    let newItem = {
+      productId: product._id,
+      customerId: this.state.selectedCustomer._id,
+      quantity: qty,
+      price: 10,
+      coupon: "aaaa",
+      product: product,
+      customer: this.state.selectedCustomer,
+    };
+    this.props.itemAdded(newItem);
   };
 
   getPagedData = () => {
@@ -56,25 +70,30 @@ class PlaceOrder extends Component {
     const { totalCount, currentPageData } = this.getPagedData();
     return (
       <div className="container">
-        <form>
-          <SearchItemBar onFilter={this.handleFilter} />
-          <hr />
-          <div className="row clearfix">
-            {currentPageData.map((product, index) => (
-              <PlaceOrderProduct
-                key={product._id}
-                product={product}
-                index={index}
-              />
-            ))}
-          </div>
-          <Pagination
-            itemsCount={totalCount}
-            pageSize={this.state.pageSize}
-            currentPage={this.state.currentPage}
-            onPageChange={this.handlePageChange}
-          />
-        </form>
+        <SearchItemBar onFilter={this.handleFilter} />
+        <DataList
+          data={this.state.customers}
+          dataListTitle={"Select a customer..."}
+          onBlur={this.showCustomer}
+        />
+        <CustomerInfo customer={this.state.selectedCustomer} />
+        <hr />
+        <div className="row clearfix">
+          {currentPageData.map((product, index) => (
+            <PlaceOrderProduct
+              key={product._id}
+              product={product}
+              index={index}
+              onClick={this.handleAddItem}
+            />
+          ))}
+        </div>
+        <Pagination
+          itemsCount={totalCount}
+          pageSize={this.state.pageSize}
+          currentPage={this.state.currentPage}
+          onPageChange={this.handlePageChange}
+        />
       </div>
     );
   }
@@ -83,6 +102,7 @@ class PlaceOrder extends Component {
 // bugs:    state.entities.bugs.list
 const mapStateToProps = (state) => ({
   items: state.entities.items,
+  customers: state.entities.customers,
 });
 
 const mapDispatchToProps = {

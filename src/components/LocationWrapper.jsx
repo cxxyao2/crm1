@@ -16,7 +16,7 @@ class LocationWrapper extends Component {
     };
   }
 
-  componentDidMount() {
+  getCurrentPosition = () => {
     if (this.props.centerAroundCurrentLocation) {
       if (navigator && navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -30,11 +30,14 @@ class LocationWrapper extends Component {
             });
           },
           (error) => {
-            this.setState({ locationError: error });
+            this.setState({ locationError: JSON.stringify(error) });
           }
         );
       }
     }
+  };
+  componentDidMount() {
+    this.getCurrentPosition();
   }
 
   render() {
@@ -69,10 +72,17 @@ class LocationWrapper extends Component {
           </div>
           <div className="row">
             <div className="col ">
-              <button class="btn btn-sm btn-info">Refresh</button>
+              <button
+                class="btn btn-sm btn-info"
+                onClick={() => this.getCurrentPosition()}
+              >
+                Refresh
+              </button>
             </div>
             <div className="col ">
-              <button class="btn btn-sm btn-warning">Upload</button>
+              <button class="btn btn-sm btn-warning" onClick={this.upload}>
+                Upload
+              </button>
             </div>
           </div>
         </div>

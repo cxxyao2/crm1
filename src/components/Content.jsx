@@ -1,7 +1,7 @@
 import React from "react";
 
 const Content = (props) => {
-  const { tabData } = props;
+  const { tabData, ...rest } = props;
   return (
     <div className="tab-content" id="myTabContent">
       {tabData.map(({ name, isActive, component: Component }) => (
@@ -11,7 +11,7 @@ const Content = (props) => {
           role="tabpanel"
           aria-labelledby={name.concat("-tab")}
         >
-          <Component />
+          <Component {...rest} />
         </div>
       ))}
     </div>

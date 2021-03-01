@@ -1,15 +1,26 @@
-import userEvent from "@testing-library/user-event";
-import React, { useRef } from "react";
+import React, { useState } from "react";
+import _ from "lodash";
 
 function DataList(props) {
-  // const { data, dataListTitle } = props;
-  const data = [
-    { _id: 1, name: "apple" },
-    { _id: 2, name: "banana" },
-    { _id: 3, name: "pear" },
-  ];
-  const dataListTitle = "select a apple";
-  const inputRef = useRef(null);
+  const { data, dataListTitle } = props;
+  const [showError, setShowError] = useState(false);
+
+  const onBlur = (event) => {
+    const result = event.target.value;
+    if (result) {
+      const index = _.findIndex(data, function (item) {
+        return item.name === result;
+      });
+
+      if (index >= 0) {
+        props.onBlur(data[index]);
+        setShowError(false);
+      } else {
+        props.onBlur(undefined);
+        setShowError(true);
+      }
+    }
+  };
 
   return (
     <div className="row my-2">
@@ -17,21 +28,24 @@ function DataList(props) {
         {dataListTitle}
       </label>
       <input
-        ref={inputRef}
         class="form-control"
         list="datalistOptions"
         id="exampleDataList"
         placeholder="Type to search..."
         autoComplete="off"
-        onChange={() => console.log(inputRef.current.value)}
+        onFocus={() => setShowError(false)}
+        onBlur={onBlur}
       />
       <datalist id="datalistOptions">
         {data.map((member, index) => (
-          <option key={member._id} value={member.name}>
-            {member.name}
-          </option>
+          <option key={member._id}>{member.name}</option>
         ))}
       </datalist>
+      {showError && (
+        <div class="alert alert-warning" role="alert">
+          The value entered is not valid for current field.
+        </div>
+      )}
     </div>
   );
 }

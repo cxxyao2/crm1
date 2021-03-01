@@ -40,7 +40,13 @@ export const addItem = (item) =>
   apiCallBegan({
     url,
     method: "post",
-    data: item,
+    data: {
+      customerId: item.customerId,
+      productId: item.productId,
+      quantity: item.quantity,
+      price: item.price,
+      coupon: item.coupon,
+    },
     onSuccess: itemMoved.type,
   });
 

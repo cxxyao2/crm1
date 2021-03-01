@@ -14,7 +14,7 @@ class ResetPassword extends Form {
       sendResultMessage: "",
       showPasswordNoMatch: false,
     };
-    this.resetToken = this.props.match.params.token; // http://xxx.xxx.xxx.xxx:300/xxx?token=xxxx  TODO 需要验证是否正确
+    this.resetToken = this.props.match.params.token; //  TODO ,location? http://xxx.xxx.xxx.xxx:300/xxx?token=xxxx  TODO 需要验证是否正确
 
     // password: 1 uppercase 1 lowercase 1 num 1 special sign
     this.schema = {
