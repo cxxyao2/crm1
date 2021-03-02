@@ -1,12 +1,12 @@
 import React from "react";
-import CompanyProfile from "./CompanyProfile";
+import CustomerInfo from "./CustomerInfo";
 import LocationWrapper from "./LocationWrapper";
 
 function LocationUpload(props) {
   return (
     <>
-      <CompanyProfile />
-      <LocationWrapper />
+      <CustomerInfo {...props} />
+      <LocationWrapper {...props} />
     </>
   );
 }

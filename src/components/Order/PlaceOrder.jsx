@@ -11,7 +11,7 @@ import Pagination from "../common/pagination";
 import _ from "lodash";
 import PlaceOrderProduct from "./PlaceOrderProduct";
 import DataList from "../common/DataList";
-import CustomerInfo from "./CustomerInfo";
+import CustomerInfo from "../CustomerInfo";
 
 class PlaceOrder extends Component {
   constructor(props) {

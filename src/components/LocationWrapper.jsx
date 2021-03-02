@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { GoogleApiWrapper } from "google-maps-react";
 import { myMapKey } from "../config/config.json";
 import CurrentLocation from "./CurrentLocation";
+import { saveItinerary } from "../services/itineraryservice";
+import { getTodayYMD } from "../utils/dateFormat";
 
 class LocationWrapper extends Component {
   constructor(props) {
@@ -15,6 +17,23 @@ class LocationWrapper extends Component {
       locationError: {},
     };
   }
+
+  upload = async () => {
+    const { user, customer } = this.props;
+    const { currentLocation: loc } = this.state;
+    try {
+      let itinerary = {
+        salesmanId: user._id,
+        customerId: customer._id,
+        visitDate: getTodayYMD(),
+        latitude: loc.lat,
+        longitude: loc.lng,
+      };
+      await saveItinerary(itinerary);
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
 
   getCurrentPosition = () => {
     if (this.props.centerAroundCurrentLocation) {

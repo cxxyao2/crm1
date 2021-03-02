@@ -77,13 +77,9 @@ class App extends Component {
                 <Route exact path="/">
                   <DataList />
                 </Route>
-                <Route
-                  path="/activities"
-                  exact
-                  render={(props) => (
-                    <VisitCustomerForm {...props} user={user} />
-                  )}
-                ></Route>
+                <ProtectedRoute path="/activities" exact>
+                  <VisitCustomerForm user={user} />
+                </ProtectedRoute>
                 <Route path="/channel">
                   <Channel />
                 </Route>

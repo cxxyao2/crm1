@@ -64,7 +64,7 @@ class VisitReports extends Form {
     let endDate = "todate".concat("=", dateYMD(toDate));
     let query = salesmanName.concat("&", startDate, "&", endDate);
     try {
-      const promise = itineraryService.getItinerary(query);
+      const promise = itineraryService.getReport(query);
       const { data } = await promise;
       this.setState({ chartData: data });
     } catch (error) {

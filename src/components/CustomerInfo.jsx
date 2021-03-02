@@ -18,6 +18,12 @@ function CustomerInfo(props) {
         Level:&nbsp;
         {customer ? (customer.isGold ? "Golden" : "Silver") : placeholderStr}
       </span>
+      <span className="col-12 col-md-6">
+        latitude:&nbsp;{customer ? customer.latitude : placeholderStr}
+      </span>
+      <span className="col-12 col-md-6">
+        longitude:&nbsp;{customer ? customer.longitude : placeholderStr}
+      </span>
     </div>
   );
 }

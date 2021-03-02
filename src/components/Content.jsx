@@ -11,7 +11,7 @@ const Content = (props) => {
           role="tabpanel"
           aria-labelledby={name.concat("-tab")}
         >
-          <Component {...rest} />
+          <Component onChange={props.onChange} {...rest} />
         </div>
       ))}
     </div>

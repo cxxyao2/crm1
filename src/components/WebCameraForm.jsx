@@ -2,8 +2,11 @@ import React from "react";
 import Webcam from "react-webcam";
 import * as fileService from "../services/fileService";
 import { base64ToBlob } from "../utils/fileTypeConvert";
+import { saveItinerary } from "../services/itineraryservice";
+import getTodayYMD from "../utils/dateFormat";
 
-const WebCameraForm = () => {
+const WebCameraForm = (props) => {
+  const { user, customer } = props;
   const webcamRef = React.useRef(null);
   const [imgSrc, setImgSrc] = React.useState(null);
   const [uploadResult, setUploadResult] = React.useState("");
@@ -18,6 +21,14 @@ const WebCameraForm = () => {
     console.log(imgSrc);
     const result = await fileService.upload(formData);
     setUploadResult(result.data.message);
+    // create a new itinerary
+    let itinerary = {
+      salesmanId: user._id,
+      customerId: customer._id,
+      visitDate: getTodayYMD(),
+      photoName: fileName,
+    };
+    await saveItinerary(itinerary);
     console.log("result is ", result);
   };
 

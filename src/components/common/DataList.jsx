@@ -13,10 +13,10 @@ function DataList(props) {
       });
 
       if (index >= 0) {
-        props.onBlur(data[index]);
+        props.onChange(data[index]);
         setShowError(false);
       } else {
-        props.onBlur(undefined);
+        props.onChange(undefined);
         setShowError(true);
       }
     }
@@ -31,7 +31,7 @@ function DataList(props) {
         class="form-control"
         list="datalistOptions"
         id="exampleDataList"
-        placeholder="Type to search..."
+        placeholder="Enter key to search..."
         autoComplete="off"
         onFocus={() => setShowError(false)}
         onBlur={onBlur}

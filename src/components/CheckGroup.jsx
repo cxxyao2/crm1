@@ -30,6 +30,7 @@ function CheckGroup(props) {
       newArr.splice(idx, 1);
     }
     setSelectedArr(newArr);
+    props.onChange(selectedArr);
   };
 
   return props.activityList.map((activity, index) => (
@@ -45,9 +46,9 @@ function CheckGroup(props) {
 CheckGroup.defaultProps = {
   activityList: [
     { id: 1, value: 1, checked: true, label: "Brand Confirmation" },
-    { id: 2, value: 2, checked: false, label: "Product Arrangement" },
+    { id: 2, value: 2, checked: false, label: "Layout Assistance" },
     { id: 3, value: 3, checked: false, label: "Technical Service" },
-    { id: 4, value: 4, checked: false, label: "Sample Extraction" },
+    { id: 4, value: 4, checked: false, label: "Random Sampling" },
   ],
 };
 export default CheckGroup;
