@@ -33,8 +33,18 @@ class PlaceOrder extends Component {
     this.setState({ filteredProduct });
   };
 
-  showCustomer = (selectedCustomer) => {
-    this.setState({ selectedCustomer });
+  handleCustomer = (e) => {
+    const inputValue = e.target.value;
+    const obj = this.props.customers.find(function (item) {
+      return item.name === inputValue;
+    });
+    if (!obj) {
+      this.setState({ showError: true });
+      this.setState({ selected: undefined });
+    } else {
+      this.setState({ showError: false });
+      this.setState({ selected: obj });
+    }
   };
 
   handlePageChange = (page) => {
@@ -72,9 +82,10 @@ class PlaceOrder extends Component {
       <div className="container">
         <SearchItemBar onFilter={this.handleFilter} />
         <DataList
-          data={this.state.customers}
+          data={this.props.customers}
           dataListTitle={"Select a customer..."}
-          onBlur={this.showCustomer}
+          onBlur={this.handleCustomer}
+          showError={this.state.showError}
         />
         <CustomerInfo customer={this.state.selectedCustomer} />
         <hr />

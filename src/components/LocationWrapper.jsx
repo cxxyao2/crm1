@@ -25,7 +25,7 @@ class LocationWrapper extends Component {
       let itinerary = {
         salesmanId: user._id,
         customerId: customer._id,
-        visitDate: getTodayYMD(),
+        visitDate: new Date(),
         latitude: loc.lat,
         longitude: loc.lng,
       };
@@ -74,17 +74,17 @@ class LocationWrapper extends Component {
           </div>
           <div className="row">
             <div className="col-6 col-md-2 ">
-              <label class="form-label">Longitude</label>
+              <label className="form-label">Longitude</label>
             </div>
             <div className="col-6 col-md-4  ">
-              <label class="form-label text-info">
+              <label className="form-label text-info">
                 {this.state.currentLocation.lng}
               </label>
             </div>
 
             <div className="col-6 col-md-2 ">Latitude</div>
             <div className="col-6 col-md-4 ">
-              <label class="form-label text-info">
+              <label className="form-label text-info">
                 {this.state.currentLocation.lat}
               </label>
             </div>
@@ -92,14 +92,14 @@ class LocationWrapper extends Component {
           <div className="row">
             <div className="col ">
               <button
-                class="btn btn-sm btn-info"
+                className="btn btn-sm btn-info"
                 onClick={() => this.getCurrentPosition()}
               >
                 Refresh
               </button>
             </div>
             <div className="col ">
-              <button class="btn btn-sm btn-warning" onClick={this.upload}>
+              <button className="btn btn-sm btn-warning" onClick={this.upload}>
                 Upload
               </button>
             </div>

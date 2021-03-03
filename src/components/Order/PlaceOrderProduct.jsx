@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 
 function PlaceOrderProduct(props) {
-  
-
   const [qty, setQty] = useState(0);
   const [showError, setShowError] = useState(false);
   const { product, index } = props;
@@ -60,7 +58,7 @@ function PlaceOrderProduct(props) {
                 Add
               </span>
               {showError && (
-                <div class="alert alert-warning" role="alert">
+                <div className="alert alert-warning" role="alert">
                   The value entered is not valid for current field.
                 </div>
               )}

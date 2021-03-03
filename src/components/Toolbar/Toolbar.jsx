@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 import "./Toolbar.css";
 import DrawerToggleButton from "../SideDrawer/DrawerToggleButton";
 import { connect } from "react-redux";
-import logo1 from "../../images/gas.png";
 
 class Toolbar extends Component {
   render() {
+    const { user } = this.props;
     return (
       <header className="toolbar">
         <nav className="toolbar_navigation">
@@ -32,18 +32,40 @@ class Toolbar extends Component {
               <li>
                 <Link to="/clients">Clients</Link>
               </li>
-              <li className="iconUp">
-                <Link to="/login">
-                  Sign In
-                  <i
-                    className="fa fa-user"
-                    style={{
-                      fontSize: "2rem",
-                      color: "white",
-                    }}
-                  ></i>
-                </Link>
+              <li className="dropdown">
+                <div className="dropdown-content">
+                  <Link to="/admin/inventory">Inventory</Link>
+                  <Link to="/admin/visit-reports">Reports</Link>
+                </div>
               </li>
+              {user ? (
+                <li className="iconUp">
+                  <Link to="/logout">
+                    Log out
+                    <i
+                      className="fa fa-user"
+                      style={{
+                        fontSize: "1.5rem",
+                        color: "rgb(153,194,255)",
+                      }}
+                    ></i>
+                  </Link>
+                </li>
+              ) : (
+                <li className="iconUp">
+                  <Link to="/login">
+                    Sign In
+                    <i
+                      className="fa fa-user"
+                      style={{
+                        fontSize: "1.5rem",
+                        color: "white",
+                      }}
+                    ></i>
+                  </Link>
+                </li>
+              )}
+
               {this.props.items && this.props.items.length >= 1 && (
                 <li onClick={() => this.props.history.push("/order-details")}>
                   <i

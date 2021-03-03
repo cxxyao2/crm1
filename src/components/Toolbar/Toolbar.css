@@ -31,27 +31,34 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
+  display: flex; /* flex-direction: default is row */
 }
 
 .toolbar_navigation-items li {
   padding: 0 0.5rem;
 }
 
+/* TODO 需要验证是否要改成div */
+.toolbar_navigation-items li.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.toolbar_navigation-items li.dropdown .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.toolbar_navigation-items li.dropdown:hover .dropdown-content {
+  display: block;
+}
+
 .toolbar_navigation-items .iconUp {
   position: relative !important;
   top: -10px;
-}
-
-.loginIcon {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  width: 50px;
-  height: 50px;
-  border: 1px solid var(--bs-white);
-  background-color: var(--bs-white);
-  box-shadow: 0px 0px 2px var(--bs-orange);
 }
 
 .toolbar_navigation-items a {

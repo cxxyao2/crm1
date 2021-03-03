@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import tree1 from "../../images/autraliaoil@1x.jpg";
-import CustomerInfo from "./CustomerInfo";
+import CustomerInfo from "../CustomerInfo";
 import "./OrderDetails.css";
 import { useDispatch, useSelector } from "react-redux";
 
+import { saveSign } from "../../config/config.json";
 import { itemMoved, addItem, getItems } from "../../store/reducers/cartItems";
 
 function OrderDetails(props) {
@@ -14,7 +15,7 @@ function OrderDetails(props) {
   const [subtotalQty, setSubtotalQty] = useState(0);
   const [subtotalPrice, setSubtotalPrice] = useState(0);
 
-  const [saveFlag, setSaveFlag] = useState(0); // 1 failed 2 succeed 0 not save
+  const [saveFlag, setSaveFlag] = useState(saveSign.unSaved); // 1 failed 2 succeed 0 not save
   const [errMsg, setErrMsg] = useState("");
   const succeedMessage = "Data is saved successfully.";
 
@@ -39,12 +40,16 @@ function OrderDetails(props) {
   const onSubmit = () => {
     try {
       handleSubmit();
-      setSaveFlag(2);
+      setSaveFlag(saveSign.succeed);
       setItems(undefined);
     } catch (err) {
-      setSaveFlag(1);
-      
-      if (err && err.response.status === 400) setErrMsg(err.response.data);
+      setSaveFlag(saveSign.fail);
+
+      if (err && err.response.status === 400) {
+        setErrMsg(err.response.data);
+      } else {
+        setErrMsg(JSON.stringify(err));
+      }
       console.log("err", err.response.data);
     }
   };
@@ -81,8 +86,12 @@ function OrderDetails(props) {
         <h5>Order details</h5>
         <CustomerInfo customer={customer} />
       </div>
-      {saveFlag === 1 && <div>{errMsg}</div>}
-      {saveFlag === 2 && <div>{succeedMessage}</div>}
+      {saveFlag === saveSign.fail && (
+        <div className="alert alert-danger">{errMsg}</div>
+      )}
+      {saveFlag === saveSign.succeed && (
+        <div className="alert alert-info">{succeedMessage}</div>
+      )}
       <form onSubmit={onSubmit}>
         {(!items || items.length <= 0) && (
           <div className="alert alert-info">Cart is empty.</div>

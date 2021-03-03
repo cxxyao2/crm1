@@ -4,17 +4,12 @@ import "./Avatar.css";
 
 const Avatar = () => {
   return (
-    <div className="row  gy-2 border-0">
-      <div className="col">
+    <p className="d-flex flex-column  justify-content-center align-items-center">
+      <span className="col-2 col-md-2">
         <img src={avatar} alt="avatar" className="rounded-circle avatar" />
-      </div>
-      <div className="col align-middle">
-        <dl>
-          <dt>Mike Jeff</dt>
-          <dd>CTO</dd>
-        </dl>
-      </div>
-    </div>
+      </span>
+      <span className="col-2 col-md-2 text-nowrap">Mike Jeff</span>
+    </p>
   );
 };
 
