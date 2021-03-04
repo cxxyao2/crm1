@@ -1,7 +1,7 @@
 import React from "react";
 
 function DataList(props) {
-  const { data, dataListTitle, showError,onBlur } = props;
+  const { inputName, data, dataListTitle, showError, onBlur } = props;
 
   return (
     <div className="row my-2">
@@ -9,6 +9,7 @@ function DataList(props) {
         {dataListTitle}
       </label>
       <input
+        name={inputName}
         className="form-control"
         list="datalistOptions"
         id="exampleDataList"

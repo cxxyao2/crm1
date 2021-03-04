@@ -19,17 +19,18 @@ class LocationWrapper extends Component {
   }
 
   upload = async () => {
-    const { user, customer } = this.props;
+    const { user, customer, visitStart } = this.props;
     const { currentLocation: loc } = this.state;
     try {
       let itinerary = {
         salesmanId: user._id,
         customerId: customer._id,
-        visitDate: new Date(),
+        visitStart: visitStart,
         latitude: loc.lat,
         longitude: loc.lng,
       };
       await saveItinerary(itinerary);
+      this.props.onChange("Location"); // Location upload ok
     } catch (err) {
       console.log(err.response.data);
     }
@@ -60,6 +61,7 @@ class LocationWrapper extends Component {
   }
 
   render() {
+    const { locationEnable } = this.props;
     if (!this.state.currentLocation || this.state.locationError.message)
       return (
         <div className="container bg-white border  text-error">
@@ -67,48 +69,54 @@ class LocationWrapper extends Component {
         </div>
       );
     return (
-      <>
-        <div className=" container bg-white border rounded my-2 p-2">
-          <div className="col-12">
-            <strong>Coordinations</strong>
-          </div>
-          <div className="row">
-            <div className="col-6 col-md-2 ">
-              <label className="form-label">Longitude</label>
+      <div className=" container bg-white border rounded my-2 p-2">
+        <form>
+          <fieldset disabled={!locationEnable}>
+            <legend>Coordinations</legend>
+            <div className="row">
+              <div className="col-6 col-md-2 ">
+                <label className="form-label">Longitude</label>
+              </div>
+              <div className="col-6 col-md-4  ">
+                <label className="form-label text-info">
+                  {this.state.currentLocation.lng}
+                </label>
+              </div>
+
+              <div className="col-6 col-md-2 ">Latitude</div>
+              <div className="col-6 col-md-4 ">
+                <label className="form-label text-info">
+                  {this.state.currentLocation.lat}
+                </label>
+              </div>
             </div>
-            <div className="col-6 col-md-4  ">
-              <label className="form-label text-info">
-                {this.state.currentLocation.lng}
-              </label>
+            <div className="row">
+              <div className="col ">
+                <button
+                  type="button"
+                  className="btn btn-sm btn-info"
+                  onClick={() => this.getCurrentPosition()}
+                >
+                  Refresh
+                </button>
+              </div>
+              <div className="col ">
+                <button
+                  className="btn btn-sm btn-warning"
+                  type="button"
+                  onClick={this.upload}
+                >
+                  Upload
+                </button>
+              </div>
             </div>
 
-            <div className="col-6 col-md-2 ">Latitude</div>
-            <div className="col-6 col-md-4 ">
-              <label className="form-label text-info">
-                {this.state.currentLocation.lat}
-              </label>
+            <div className="container bg-white  border rounded  p-0">
+              <CurrentLocation initialCenter={this.state.currentLocation} />
             </div>
-          </div>
-          <div className="row">
-            <div className="col ">
-              <button
-                className="btn btn-sm btn-info"
-                onClick={() => this.getCurrentPosition()}
-              >
-                Refresh
-              </button>
-            </div>
-            <div className="col ">
-              <button className="btn btn-sm btn-warning" onClick={this.upload}>
-                Upload
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="container bg-white  border rounded  p-0">
-          <CurrentLocation initialCenter={this.state.currentLocation} />
-        </div>
-      </>
+          </fieldset>
+        </form>
+      </div>
     );
   }
 }

@@ -4,6 +4,10 @@ export function base64ToBlob(urlData, type) {
   // * 和 + 限定符都是贪婪的，因为它们会尽可能多的匹配文字，只有在它们的后面加上一个 ? 就可以实现非贪婪或最小匹配。
   let mime = arr[0].match(/:(.*?);/)[1] || type;
   // 去掉url的头，并转化为byte
+  // atob() function decodes a string of data which has been encoded using Base64 encoding. 解码
+  // You can use the btoa() method to encode and transmit data which may otherwise cause communication problems,
+  // then transmit it and use the atob() method to decode the data again
+
   let byteCharacters = atob(arr[1]);
   let sliceSize = 512;
   let byteArrays = [];

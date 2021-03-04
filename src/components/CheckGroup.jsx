@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
  function Check(props) {
-  const { id, value, label } = props.activity;
+  const { id, value, label,checked } = props.activity;
   return (
     <div className="form-check">
       <input
@@ -9,8 +9,8 @@ import React, { useState } from "react";
         type="checkbox"
         value={value}
         id={"flexCheckChecked".concat(id)}
-        checked={props.selectedArr.indexOf(value) < 0 ? false : true}
-        onClick={() => props.onClick(value)}
+        checked={checked}
+        onClick={() => props.onChange(props.activity)}
       />
       <label className="form-check-label" for={"flexCheckChecked".concat(id)}>
         {label}
@@ -20,35 +20,14 @@ import React, { useState } from "react";
 }
 
 function CheckGroup(props) {
-  const [selectedArr, setSelectedArr] = useState([props.activityList[0].value]);
-  const handleClick = (value) => {
-    const newArr = [...selectedArr];
-    const idx = selectedArr.indexOf(value);
-    if (idx < 0) {
-      newArr.push(value);
-    } else {
-      newArr.splice(idx, 1);
-    }
-    setSelectedArr(newArr);
-    props.onChange(selectedArr);
-  };
-
   return props.activityList.map((activity, index) => (
     <Check
       key={index}
       activity={activity}
-      selectedArr={selectedArr}
-      onClick={handleClick}
+      onChange={props.onChange}
     />
   ));
 }
 
-CheckGroup.defaultProps = {
-  activityList: [
-    { id: 1, value: 1, checked: true, label: "Brand Confirmation" },
-    { id: 2, value: 2, checked: false, label: "Layout Assistance" },
-    { id: 3, value: 3, checked: false, label: "Technical Service" },
-    { id: 4, value: 4, checked: false, label: "Random Sampling" },
-  ],
-};
+
 export default CheckGroup;

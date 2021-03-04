@@ -25,6 +25,10 @@ export function getUser(UserId) {
   return http.get(apiEndpoint + "/" + UserId);
 }
 
+export function getAllUsers() {
+  return http.get(apiEndpoint);
+}
+
 export function saveUser(User) {
   return http.post(apiEndpoint, User);
 }

@@ -25,6 +25,9 @@ const slice = createSlice({
     customerRequestFailed: (customers, action) => {
       customers.loading = false;
     },
+    customerAdded: (customers, action) => {
+      customers.list.push(action.payload);
+    },
   },
 });
 
@@ -32,12 +35,14 @@ const {
   customerRequested,
   customerReceived,
   customerRequestFailed,
+  customerAdded,
 } = slice.actions;
 
 export const customerActions = {
   customerRequested,
   customerReceived,
   customerRequestFailed,
+  customerAdded,
 };
 export default slice.reducer;
 
@@ -60,9 +65,33 @@ export const loadCustomers = () => (dispatch, getState) => {
   );
 };
 
+export const addCustomer = (customer) =>
+  apiCallBegan({
+    url,
+    method: "post",
+    data: {
+      name: customer.name,
+      isGold: customer.isGold,
+      phone: customer.phone,
+    },
+    onSuccess: customerAdded.type,
+  });
+
+  export const updateCustomer = (customer) =>
+    apiCallBegan({
+      url: url.concat(`/{customer._id}`),
+      method: "put",
+      data: {
+        name: customer.name,
+        isGold: customer.isGold,
+        phone: customer.phone,
+      },
+      onSuccess: customerAdded.type,
+    });
+
 export const getAuthorizedCustomers = (userRegion) =>
   createSelector(
-    (state) => state.entities.customers,
+    (state) => state.entities.customers.list,
     (customers) =>
       customers.filter((customer) => customer.region === userRegion)
   );

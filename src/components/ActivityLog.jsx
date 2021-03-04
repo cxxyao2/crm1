@@ -1,38 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CheckGroup from "./CheckGroup";
 import { activityList } from "../config/config.json";
 import { saveItinerary } from "../services/itineraryservice";
-import { saveSign } from "../config/config.json";
 
 function ActivityLog(props) {
-  const { user, customer } = props;
-  const [activities, setActivities] = useState([1]); // [1,2,3,4,...]
+  const initActivityList = [
+    { id: 1, value: 1, checked: true, label: "Brand Confirmation" },
+    { id: 2, value: 2, checked: false, label: "Layout Assistance" },
+    { id: 3, value: 3, checked: false, label: "Technical Service" },
+    { id: 4, value: 4, checked: false, label: "Random Sampling" },
+  ];
+
+  const { user, customer, logEnable, visitStart } = props;
+  const [activities, setActivities] = useState(initActivityList); // [1,2,3,4,...]
   const [note, setNote] = useState("");
 
-  const [saveFlag, setSaveFlag] = useState(saveSign.unSaved); // 1 failed 2 succeed 0 not save
-  const [errMsg, setErrMsg] = useState("");
+  const [uploadResult, setUploadResult] = React.useState(undefined);
+  const [visitEnd, setVisitEnd] = React.useState(new Date());
+
   const succeedMessage = "Data is saved successfully.";
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      tick();
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  const tick = () => {
+    setVisitEnd(new Date());
+  };
 
   const handleSubmit = async () => {
     try {
       let itinerary = {
         salesmanId: user._id,
         customerId: customer._id,
-        visitDate: new Date(),
+        visitStart: visitStart,
+        visitEnd: visitEnd,
         activities: activities,
         visitNote: note,
       };
       await saveItinerary(itinerary);
-      setSaveFlag(saveSign.succeed);
+      setUploadResult({ uploaded: true, message: succeedMessage });
+      props.onChange("Log");
     } catch (err) {
-      setSaveFlag(saveSign.fail);
-
-      if (err && err.response.status === 400) {
-        setErrMsg(err.response.data);
+      if (err.response && err.response.status === 400) {
+        setUploadResult({ uploaded: false, message: err.response.data });
       } else {
-        setErrMsg(JSON.stringify(err));
+        setUploadResult({ uploaded: false, message: JSON.stringify(err) });
       }
-      console.log("err", err.response.data);
     }
   };
   const handleChange = ({ target }) => {
@@ -45,20 +65,27 @@ function ActivityLog(props) {
     }
   };
 
+  const handleActivityChange = (activity) => {
+    const data = [...activities];
+    const index = data.find(activity);
+    if (index < 0) {
+      alert("exception error happened!");
+    } else {
+      data[index].checked = !data[index].checked;
+    }
+    setActivities(data);
+  };
+
   return (
     <div className="container bg-white border rounded mt-2 mb-2 p-2">
-      {saveFlag === saveSign.fail && (
-        <div className="alert alert-danger">{errMsg}</div>
-      )}
-      {saveFlag === saveSign.succeed && (
-        <div className="alert alert-info">{succeedMessage}</div>
-      )}
-      <form onSubmit={handleSubmit} autocomplete={"off"}>
-        <fieldset disable={saveFlag === saveSign.succeed}>
+      <form onSubmit={handleSubmit}>
+        <fieldset disable={!logEnable}>
           <legend>Note your activities </legend>
+          <div>Visit Ended: {visitEnd.toLocaleString()}</div>
+          {/* CheckGroup TODO */}
           <CheckGroup
-            activityList={activityList}
-            onChange={(value) => setActivities(value)}
+            activityList={activities}
+            onChange={handleActivityChange}
           />
           <div className="input-group">
             <span className="input-group-text border-top-0 border-bottom-0  border-end-0 border-start  border-3 border-primary">
@@ -80,6 +107,15 @@ function ActivityLog(props) {
               </button>
             </div>
           </div>
+          {uploadResult && (
+            <div
+              className={"alert alert-".concat(
+                uploadResult.uploaded ? "success" : "danger"
+              )}
+            >
+              {uploadResult.message}
+            </div>
+          )}
         </fieldset>
       </form>
     </div>

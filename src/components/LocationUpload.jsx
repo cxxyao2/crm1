@@ -6,7 +6,7 @@ function LocationUpload(props) {
   return (
     <>
       <CustomerInfo {...props} />
-      <LocationWrapper {...props} />
+      <LocationWrapper {...props} onChange={props.onChange}/>
     </>
   );
 }
