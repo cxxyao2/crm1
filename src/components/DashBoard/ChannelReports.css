@@ -3,7 +3,7 @@
 }
 
 .table-row {
-  transition: background-color 10s;
+  transition: background-color 1s;
 }
 .table-row:hover {
   background-color: coral !important;

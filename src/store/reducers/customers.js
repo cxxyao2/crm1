@@ -47,7 +47,7 @@ export const customerActions = {
 export default slice.reducer;
 
 // Action Creators
-const url = "customers";
+const url = "/customers";
 
 // An action is a function, () => fn(dispatch, getState)
 export const loadCustomers = () => (dispatch, getState) => {
@@ -77,17 +77,17 @@ export const addCustomer = (customer) =>
     onSuccess: customerAdded.type,
   });
 
-  export const updateCustomer = (customer) =>
-    apiCallBegan({
-      url: url.concat(`/{customer._id}`),
-      method: "put",
-      data: {
-        name: customer.name,
-        isGold: customer.isGold,
-        phone: customer.phone,
-      },
-      onSuccess: customerAdded.type,
-    });
+export const updateCustomer = (customer) =>
+  apiCallBegan({
+    url: url.concat(`/{customer._id}`),
+    method: "put",
+    data: {
+      name: customer.name,
+      isGold: customer.isGold,
+      phone: customer.phone,
+    },
+    onSuccess: customerAdded.type,
+  });
 
 export const getAuthorizedCustomers = (userRegion) =>
   createSelector(

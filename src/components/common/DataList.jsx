@@ -1,20 +1,28 @@
 import React from "react";
 
 function DataList(props) {
-  const { inputName, data, dataListTitle, showError, onBlur } = props;
+  const {
+    inputName,
+    data,
+    dataListTitle,
+    showError,
+    onChange,
+    ...rest
+  } = props;
 
   return (
-    <div className="row my-2">
-      <label htmlFor="exampleDataList" className="form-label">
+    <div className="row mb-3">
+      <label htmlFor={inputName} className="form-label">
         {dataListTitle}
       </label>
       <input
         name={inputName}
         className="form-control"
         list="datalistOptions"
-        id="exampleDataList"
+        id={inputName}
         placeholder="Enter key to search..."
-        onBlur={onBlur}
+        onChange={onChange}
+        {...rest}
       />
       <datalist id="datalistOptions">
         {data.map((member, index) => (
@@ -25,7 +33,7 @@ function DataList(props) {
       </datalist>
       {showError && (
         <div className="alert alert-warning" role="alert">
-          The value entered is not valid for current field.
+          {showError}
         </div>
       )}
     </div>

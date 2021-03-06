@@ -16,7 +16,7 @@ function SearchItemBar(props) {
     const result = getCategories();
     setCategories(result);
     dispatch(loadProducts());
-  }, [dispatch]);
+  });
 
   const onFilter = () => {
     const filterCategory = categoryRef.current.value;

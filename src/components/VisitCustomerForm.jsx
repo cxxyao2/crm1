@@ -95,7 +95,7 @@ function VisitCustomerForm(props) {
         inputName={"customer"}
         data={customers}
         dataListTitle={"Select visited customer:"}
-        onBlur={handleCustomerChange}
+        onChange={handleCustomerChange}
         showError={showCustomerError}
       />
       <VisitBeginInfo

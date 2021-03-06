@@ -23,5 +23,5 @@ export function saveChannel(channel) {
 }
 
 export function updateChannel(channel) {
-  return http.put(apiEndpoint, channel);
+  return http.put(apiEndpoint + "/" + channel._id, channel);
 }

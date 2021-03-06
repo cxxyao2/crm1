@@ -15,7 +15,9 @@ import InputInOneLine from "./InputInOneLine";
 import Radiogroup from "./Radiogroup";
 
 const schema = {
-  searchKey: yup.object().shape({ searchKey: yup.string().min(3).max(20) }),
+  searchKey: yup
+    .object()
+    .shape({ searchKeywords: yup.string().min(3).max(20) }),
   name: yup.object().shape({ name: yup.string().min(3) }),
   address: yup.object().shape({ address: yup.string().min(3) }),
   contactPerson: yup
@@ -23,7 +25,7 @@ const schema = {
     .shape({ contactPerson: yup.string().min(3).max(50) }),
   phone: yup.object().shape({ phone: yup.string().matches(/[0-9]{10}/) }),
   email: yup.object().shape({ email: yup.string().email() }),
-  reasons: yup.object().shape({ reasons: yup.string().min(5).max(1000) }),
+  reasons: yup.object().shape({ otherInfos: yup.string().min(5).max(1000) }),
 };
 
 const statusArr = [
@@ -58,7 +60,6 @@ class Channel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      test1: "xxx",
       createOrUpdate: "update",
       selectedStatus: 1, // default: ongoing
       salespersonList: undefined,
@@ -66,7 +67,7 @@ class Channel extends Component {
       saveResult: undefined,
       disabled: true, // 默认不能编辑
       searchKeywords: "",
-      searchChannelErr: "",
+      searchChannelErr: undefined,
       err: {
         searchKey: undefined,
         name: undefined,
@@ -174,29 +175,30 @@ class Channel extends Component {
     }
   };
 
-  validateSearchKey = async (value) => {
+  validateSearchKey = (value) => {
     // schema["searchKey"]
     //   .validate({ searchKey: searchKey })
     //   .catch(function (err) {
     //     this.setState({ searchChannelErr: JSON.stringify(err.errors) });
     //     return false;
     //   });
-    let errMessage;
-    await schema["searchKey"]
-      .validate({ searchKey: value })
-      .catch(function (err) {
-        console.log("err", err.errors[0]);
-        errMessage = err.errors[0];
-      });
-    this.setState({ searchChannelErr: errMessage });
-    return errMessage;
+
+    const schem1 = yup
+      .object()
+      .shape({ searchKeywords: yup.string().min(3).max(20) });
+    schem1.validate({ searchKey: value }).catch(function (err) {
+      console.log("err is ", err.errors[0]);
+      this.setState({ searchChannelErr: JSON.stringify(err.errors[0]) });
+      return false;
+    });
+    return true;
   };
 
   handleChannelSearch = async (e) => {
     e.preventDefault();
+    console.log("ebgin search");
     const { searchKeywords } = this.state;
-    const errMessage = await this.validateSearchKey(searchKeywords);
-    if (errMessage && errMessage.length >= 1) return;
+    if (!this.validateSearchKey(searchKeywords)) return;
 
     try {
       const result = await getChannelByName(this.state.searchKeywords);
@@ -288,7 +290,115 @@ class Channel extends Component {
           )}
         </form>
         <hr />
+        <form onSubmit={this.handleSubmit}>
+          <fieldset disabled={disabled}>
+            <legend>Channel Registration</legend>
+            <InputInOneLine
+              labelName="Name:"
+              controlName="name"
+              controlType="text"
+              onChange={this.handleChange}
+              err={err["name"]}
+              data={formData["name"]}
+            />
+            <InputInOneLine
+              labelName="Address:"
+              controlName="address"
+              controlType="text"
+              onChange={this.handleChange}
+              err={err["address"]}
+              data={formData["address"]}
+            />
+            <InputInOneLine
+              labelName="ContactPerson:"
+              controlName="contactPerson"
+              controlType="text"
+              onChange={this.handleChange}
+              err={err["contactPerson"]}
+              data={formData["contactPerson"]}
+            />
+            <InputInOneLine
+              labelName="Phone:"
+              controlName="phone"
+              controlType="text"
+              onChange={this.handleChange}
+              err={err["address"]}
+              data={formData["phone"]}
+              pattern="[0-9]{10}"
+            />
+            <InputInOneLine
+              labelName="Email:"
+              controlName="email"
+              controlType="email"
+              onChange={this.handleChange}
+              err={err["email"]}
+              data={formData["email"]}
+            />
+            <div className="row mb-3">
+              <label className="col-sm-2 col-form-label">Responsible:</label>
+              <label className="col-sm-10 col-form-label">
+                {this.user.name}
+              </label>
+            </div>
+            {salespersonList && (
+              <DataList
+                inputName={"salesperson"}
+                data={salespersonList}
+                dataListTitle={"Select a collaborator :"}
+                onChange={this.handleChange}
+                showError={err["salesperson"]}
+              />
+            )}
+            <div className="row mb-3">
+              <label className="col-sm-2 col-form-label">Level:</label>
+              <label className="col-sm-10 col-form-label">
+                <strong>{levelList[formData["level"] - 1]}</strong>
+              </label>
+            </div>
+            <Radiogroup
+              groupName={"Status:"}
+              controlName="status"
+              data={statusArr}
+              selected={formData["status"]}
+              onChange={(value) => {
+                const data = { ...this.state.formData };
+                data["status"] = value;
+                this.setState({ formData: data });
+              }}
+              disabled={formData["level"] === 4}
+            />
 
+            {formData["level"] === 4 && (
+              <Radiogroup
+                groupName={"Close By:"}
+                controlName="closeType"
+                data={statusArr}
+                selected={formData["closeType"]}
+                onChange={(e) => {
+                  const data = { ...this.state.formData };
+                  data["closeType"] = e.target.value;
+                  this.setState({ formData: data });
+                }}
+              />
+            )}
+            <div className="form-floating my-3">
+              <textarea
+                className="form-control"
+                placeholder="Add comments here.."
+                id="reasons"
+                rows="5"
+                maxLength="1000"
+                value={formData["reasons"]}
+                onChange={(e) => {
+                  const data = { ...this.state.formData };
+                  data["reasons"] = e.target.value.trim();
+                  this.setState({ formData: data });
+                }}
+              ></textarea>
+              <label htmlFor="reasons">Other Info:</label>
+            </div>
+          </fieldset>
+        </form>
         <div>
           <button
             type="button"

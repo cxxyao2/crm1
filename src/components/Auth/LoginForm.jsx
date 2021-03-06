@@ -58,6 +58,7 @@ class LoginForm extends Form {
               <form onSubmit={this.handleSubmit} className="row g-2">
                 {this.renderInput("username", "Username")}
                 {this.renderInput("password", "Password", "password")}
+                {/* todo autocomplete="new-password" 停止自动填充 password  */}
                 <div className="col-6 col-md-6">
                   <div className="form-check">
                     <input
