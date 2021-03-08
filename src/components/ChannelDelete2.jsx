@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 import * as yup from "yup";
-import { addCustomer } from "../store/reducers/customers";
+import { addCustomer, updateCustomer } from "../store/reducers/customers";
 import {
   updateChannel,
   saveChannel,
@@ -15,9 +15,9 @@ import InputInOneLine from "./InputInOneLine";
 import Radiogroup from "./Radiogroup";
 
 const formSchema = yup.object().shape({
-  name: yup.string().min(5),
+  name: yup.string().min(3),
   address: yup.string().min(3),
-  contactPerson: yup.string().min(5).max(50),
+  contactPerson: yup.string().min(3).max(50),
   phone: yup
     .string()
     .matches(/[0-9]{10}/)
@@ -63,26 +63,19 @@ class Channel extends Component {
     closeType: 2, // default: 成功关闭
     reasons: "",
     responsible: this.user.id,
-    collaborator: this.user.id,
-  };
-
-  iniError = {
-    name: undefined,
-    address: undefined,
-    contactPerson: undefined,
-    phone: undefined,
-    email: undefined,
-    reasons: undefined,
+    collaborator: "",
   };
 
   constructor(props) {
     super(props);
     this.state = {
+      test1: "xxx",
       createOrUpdate: "update",
+      selectedStatus: 1, // default: ongoing
       salespersonList: undefined,
       getSalespersonListErr: undefined,
       saveResult: undefined,
-      disabled: true, // 默认窗体不能编辑
+      disabled: true, // 默认不能编辑
       searchKeywords: "",
       searchChannelErr: undefined,
       err: {
@@ -107,23 +100,17 @@ class Channel extends Component {
     const eValue = e.target.value;
     const formData = { ...this.state.formData };
     switch (eName) {
-      case "collaborator":
+      case "salesperson":
         const { salespersonList } = this.state;
-        formData[eName] = undefined;
-        if (eValue && eValue.trim().length > 0) {
-          const obj = salespersonList.find(function (item) {
-            return item.name === eValue;
-          });
-          if (obj) {
-            errMsg[eName] = undefined;
-            formData[eName] = obj._id;
-          } else {
-            errMsg[eName] =
-              " The value entered is not valid for current field.";
-          }
+        const obj = salespersonList.find(function (item) {
+          return item.name === eValue;
+        });
+        if (!obj) {
+          errMsg[eName] = " The value entered is not valid for current field.";
+          formData[eName] = undefined;
         } else {
           errMsg[eName] = undefined;
-          formData[eName] = undefined;
+          formData[eName] = eValue;
         }
         break;
       default:
@@ -134,8 +121,17 @@ class Channel extends Component {
     this.setState({ formData });
   };
 
-  createValidatedObj = () => {
+  validateForm = () => {
     const { formData } = this.state;
+    let valide = true;
+    const err = {
+      name: undefined,
+      address: undefined,
+      contactPerson: undefined,
+      phone: undefined,
+      email: undefined,
+      reasons: undefined,
+    };
 
     const obj = {
       name: formData["name"],
@@ -145,85 +141,68 @@ class Channel extends Component {
       email: formData["email"],
       reasons: formData["reasons"],
     };
-    return obj;
+
+    const xxxx = formSchema.validate(obj).catch(function (errMsg) {
+      let fields = errMsg.errors[0].split(" ");
+      err[fields[0]] = errMsg.errors[0];
+      valide = false;
+    });
+    this.setState({ err });
+    console.log("xxhi, ", xxxx);
+    return valide;
   };
 
   handleSubmit = async (e) => {
     e.preventDefault();
-
     const { formData, createOrUpdate } = this.state;
-    console.log("submit", formData);
+    if (!this.validateForm()) return;
 
-    this.setState({ err: this.iniError });
     this.setState({ saveResult: undefined });
-    formSchema
-      .validate(this.createValidatedObj())
-      .then(async () => {
-        try {
-          console.log("hi,flag ", createOrUpdate);
-          console.log("formData is ", formData);
-          this.setState({ disabled: true }); // form lock
-          let result;
-          switch (createOrUpdate) {
-            case "update":
-              result = await updateChannel(formData);
-              break;
-            default:
-              //   case "create""levelup":
-              result = await saveChannel(formData);
-              if (result && result.data) {
-                const newForm = { ...formData };
-                newForm["_id"] = result.data._id;
-                this.setState({ formData: newForm });
-              }
-              // 成功关闭,channel变成customer TODO
-              if (formData["level"] === 4 && formData["closeType"] === 2) {
-                const customer = {
-                  name: formData["name"],
-                  isGold: false,
-                  phone: formData["phone"],
-                };
-                await this.props.addCustomer(customer);
-              }
-              break;
+    try {
+      switch (createOrUpdate) {
+        case "create":
+          const result = await this.handleSave(formData);
+          if (result && result.data) {
+            const newForm = { ...formData };
+            newForm["_id"] = result.data._id;
+            this.setState({ formData: newForm });
           }
-          const saveMessage = {
-            flag: true,
-            message: "Data saved successfully.",
-          };
-          this.setState({
-            saveResult: saveMessage,
-          });
-        } catch (err) {
-          if (err.response && err.response.status === 400) {
-            const result = { flag: false, message: err.response.data };
-            this.setState({
-              saveResult: result,
-            });
-          } else {
-            const result = { flag: false, message: JSON.stringify(err) };
-            this.setState({
-              saveResult: result,
-            });
-          }
-          this.setState({ disabled: false }); // form 能修改
-        }
-      })
-      .catch((errMsg) => {
-        const transit = errMsg.errors[0];
-        const err = {
-          name: undefined,
-          address: undefined,
-          contactPerson: undefined,
-          phone: undefined,
-          email: undefined,
-          reasons: undefined,
-        };
-        let index = transit.indexOf(" ");
-        let errFieldName = transit.substr(0, index);
-        err[errFieldName] = transit;
-        this.setState({ err });
+          break;
+        case "update":
+          await this.updateChannel(formData);
+          break;
+        default:
+          break;
+      }
+      this.setState({
+        saveResult: { flag: true, message: "Data is saved successfully." },
       });
+      this.setState({ disabled: true }); // form 不能修改
+    } catch (err) {
+      if (err.response && err.response.status === 400) {
+        this.setState({
+          saveResult: { flag: false, message: err.response.data },
+        });
+      } else {
+        this.setState({
+          saveResult: { flag: false, message: JSON.stringify(err) },
+        });
+      }
+      this.setState({ disabled: false }); // form 能修改
+    }
+  };
+
+  handleSave = async (formData) => {
+    await saveChannel(formData);
+    // 成功关闭,channel变成customer
+    if (formData["level"] === 4 && formData["closeType"] === 2) {
+      const customer = {
+        name: formData["name"],
+        isGold: false,
+        phone: formData["phone"],
+      };
+      await this.props.addCustomer(customer);
+    }
   };
 
   validateSearchKey = async (value) => {
@@ -237,12 +216,11 @@ class Channel extends Component {
   handleChannelSearch = async (e) => {
     e.preventDefault();
     const { searchKeywords } = this.state;
-    this.setState({ searchChannelErr: undefined });
+    const errMessage = await this.validateSearchKey(searchKeywords);
 
+    this.setState({ searchChannelErr: errMessage });
+    if (errMessage && errMessage.length >= 1) return;
     try {
-      const errMessage = await this.validateSearchKey(searchKeywords);
-      this.setState({ searchChannelErr: errMessage });
-      if (errMessage && errMessage.length >= 1) return;
       const result = await getChannelByName(this.state.searchKeywords);
       if (result && result.data && result.data.length >= 1) {
         this.setState({ formData: result.data[0] });
@@ -295,7 +273,6 @@ class Channel extends Component {
       formData,
       saveResult,
       salespersonList,
-      createOrUpdate,
       err,
     } = this.state;
 
@@ -306,9 +283,6 @@ class Channel extends Component {
         )}
         <form onSubmit={this.handleChannelSearch}>
           <div className="row mb-3 g-0">
-            <div className="col-2 col-sm-2 col-form-label fw-solid">
-              Channel:
-            </div>
             <div className="col-7 col-sm-7">
               <input
                 id="searchKey"
@@ -322,7 +296,7 @@ class Channel extends Component {
                 }
               />
             </div>
-            <div className="col-2 col-sm-2">
+            <div className="col-5 col-sm-5">
               <button type="submit" className="btn btn-sm btn-primary">
                 <i className="fa fa-search" style={{ fontSize: "1.5rem" }}></i>
               </button>
@@ -344,9 +318,6 @@ class Channel extends Component {
               onChange={this.handleChange}
               err={err}
               data={formData}
-              disabled={
-                createOrUpdate === "update" || createOrUpdate === "levelup"
-              }
             />
             <InputInOneLine
               labelName="Address:"
@@ -389,12 +360,11 @@ class Channel extends Component {
             </div>
             {salespersonList && (
               <DataList
-                inputName={"collaborator"}
+                inputName={"salesperson"}
                 data={salespersonList}
                 dataListTitle={"Select a collaborator :"}
                 onChange={this.handleChange}
                 showError={err}
-                formData={formData}
               />
             )}
             <div className="row mb-3">
@@ -447,61 +417,51 @@ class Channel extends Component {
             </div>
           </fieldset>
         </form>
-        <div className="row g-1 justify-content-between">
+        <div>
           <button
             type="button"
-            className="btn btn-sm btn-primary col-5"
+            className="btn btn-sm btn-info"
             onClick={(e) => {
               e.preventDefault();
               this.setState({
                 formData: this.iniChannel,
                 disabled: false,
                 createOrUpdate: "create",
-                saveResult: undefined,
               });
             }}
           >
             New
           </button>
-
           <button
             type="button"
-            className="btn btn-sm btn-warning col-5"
+            className="btn btn-sm btn-secondary"
             onClick={(e) => {
               e.preventDefault();
               // formData非空,且level不是最后一个级别,才能修改
               if (!formData["_id"]) {
-                alert("Please select a channel first!");
+                alert("Please save channel first!");
                 return;
               }
               // finished
-              if (formData["level"] === 4 || formData["status"] === 2) {
+              if (formData["level"] === 4 && formData["status"] === 2) {
                 alert("Closed channel cannot be modified again!");
                 return;
               }
-              this.setState({
-                disabled: false,
-                createOrUpdate: "update",
-                saveResult: undefined,
-              });
+              this.setState({ disabled: false, createOrUpdate: "update" });
             }}
           >
             Modify
           </button>
-        </div>
-        <div className="row my-2 g-1 justify-content-between">
           <button
             type="button"
-            className="btn btn-sm btn-primary col-5"
+            className="btn btn-sm btn-primary"
             onClick={this.handleSubmit}
-            disabled={disabled}
           >
             Submit
           </button>
-
           <button
             type="button"
-            className="btn btn-sm btn-warning col-5 "
+            className="btn btn-sm btn-success"
             onClick={(e) => {
               e.preventDefault();
               const newChannel = { ...formData };
@@ -513,21 +473,15 @@ class Channel extends Component {
                 alert("This is the highest level.It cannot be levelup.");
                 return;
               }
-              if (newChannel.status === 2) {
-                alert("Channel has been closed.It cannot be levelup.");
-                return;
-              }
               newChannel._id = undefined;
               newChannel.level += 1;
               if (newChannel.level === 4) {
                 newChannel.status = 2; // 关闭状态
               }
-
               this.setState({
                 disabled: false,
-                createOrUpdate: "levelup",
+                createOrUpdate: "create",
                 formData: newChannel,
-                saveResult: undefined,
               });
             }}
           >

@@ -20,13 +20,15 @@ const InputInOneLine = (props) => {
           type={controlType}
           id={controlName}
           name={controlName}
-          value={data}
+          value={data[controlName]}
           onChange={onChange}
           className="form-control"
           {...rest}
         ></input>
       </div>
-      {err && <div className="alert alert-warning">{err}</div>}
+      {err[controlName] && (
+        <div className="alert alert-warning">{err[controlName]}</div>
+      )}
     </div>
   );
 };

@@ -3,12 +3,22 @@ import React from "react";
 function DataList(props) {
   const {
     inputName,
+    formData,
     data,
     dataListTitle,
     showError,
     onChange,
     ...rest
   } = props;
+  let defaultName = "";
+  if (formData[inputName]) {
+    const defaultObj = data.find(function (item) {
+      return item._id === formData[inputName];
+    });
+    if (defaultObj) {
+      defaultName = defaultObj.name;
+    }
+  }
 
   return (
     <div className="row mb-3">
@@ -22,6 +32,7 @@ function DataList(props) {
         id={inputName}
         placeholder="Enter key to search..."
         onChange={onChange}
+        defaultValue={defaultName}
         {...rest}
       />
       <datalist id="datalistOptions">
@@ -31,9 +42,9 @@ function DataList(props) {
           </option>
         ))}
       </datalist>
-      {showError && (
+      {showError[inputName] && (
         <div className="alert alert-warning" role="alert">
-          {showError}
+          {showError[inputName]}
         </div>
       )}
     </div>
