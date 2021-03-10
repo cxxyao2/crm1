@@ -97,9 +97,9 @@ class StockRecord extends Component {
           {this.props.showDate && (
             <InfoLabel title="expired at" content={dateYMD(data.expiredDate)} />
           )}
-          <p className="m-0 p-0">
+          <div className="row g-1 justify-content-begin">
             <button
-              className="btn btn-primary col-5 col-md-3 mx-2 my-1"
+              className="btn btn-primary col-12 col-md-3 m-1"
               onClick={(event) => {
                 event.preventDefault();
                 this.clearMessage();
@@ -110,12 +110,12 @@ class StockRecord extends Component {
               Edit
             </button>
             <button
-              className="btn btn-secondary border col-5 col-md-3 m-1"
+              className="btn btn-warning border col-12 col-md-3  m-1"
               onClick={this.handleSave}
             >
               Save
             </button>
-          </p>
+          </div>
           <hr />
         </div>
       </>

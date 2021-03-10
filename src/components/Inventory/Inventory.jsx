@@ -152,15 +152,15 @@ class Inventory extends Form {
                 />
               )}
             </div>
-            <div className="col-12 col-md-12">
+            <div className="row g-1">
               <button
-                className="btn btn-primary  col-5 col-sm-5 col-md-3 my-1"
+                className="btn btn-primary  col-12  col-md-3 m-1"
                 type="submit"
               >
                 search
               </button>
               <button
-                className="btn btn-secondary   col-5 col-sm-5 col-md-3 mx-3 my-1"
+                className="btn btn-secondary   col-12  col-md-3 m-1"
                 data-bs-toggle="collapse"
                 data-bs-target="#collapseDate"
                 aria-expanded="false"
