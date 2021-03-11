@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-} from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { Line } from "recharts";
 
 // Create styles
 const styles = StyleSheet.create({
@@ -17,6 +12,7 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     flexGrow: 1,
+    lineHeight: "120%",
   },
   subtitle: {
     fontSize: 16,
@@ -34,16 +30,25 @@ const Subtitle = ({ children, ...props }) => (
     {children}
   </Text>
 );
+const LineNumberOfPage = 20;
 // Create Document Component
-const MyDocument = ({ subtitle, content }) => (
+// 20 line every page
+// one Text = one Line in A4
+// 90 characters = one lines
+const MyDocument = ({ subtitle, content, pageNumber }) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>
-        <Subtitle>{subtitle}</Subtitle>
-        <Text>{content}</Text>
-      </View>
-      <View style={styles.section}>
-        <Text>Section #2</Text>
+        <Subtitle style={styles.subtitle}>Section #1</Subtitle>
+        {Array.apply(null, Array(pageNumber)).map((item, index) =>
+          content
+            .slice(index * LineNumberOfPage, LineNumberOfPage - 1)
+            .map((lineContent, index2) => (
+              <Text style={styles.text}>
+                {index2 + " "} {lineContent}
+              </Text>
+            ))
+        )}
       </View>
     </Page>
   </Document>

@@ -26,22 +26,22 @@ function FileDownload(props) {
   }
   return (
     <div className="row">
-      {fileTypes.map((ftype, index) => (
-        <div className="col-12 col-md-3" key={ftype}>
+      {fileTypes.map((fileType, index) => (
+        <div className="col-12 col-md-3" key={fileType}>
           <div className="form-check">
             <input
               className="form-check-input"
               type="radio"
               name="fileType"
               id={"typeRadio".concat(index)}
-              value={ftype}
-              onChange={() => setFileType(ftype)}
+              value={fileType}
+              onChange={() => setFileType(fileType)}
             />
             <label
               className="form-check-label"
               htmlFor={"typeRadio".concat(index)}
             >
-              {ftype}
+              {fileType}
             </label>
           </div>
         </div>
