@@ -9,6 +9,8 @@ import configureStore from "./store/configureStore";
 import Inventory from "./components/Inventory/Inventory";
 import PDFSave from "./components/PDFPrint/PDFSave";
 
+import { LineNumberPerPage } from "./config/config.json";
+
 const store = configureStore();
 
 class App extends Component {
@@ -17,11 +19,6 @@ class App extends Component {
     content: "",
   };
   createContent = () => {
-    // 列出一些特殊符号
-    //     &#10; — 换行Line feed
-    // &#13; — 回车Carriage Return
-    // &#32; — Space
-    // $ &#36; — 美元标志Dollar sign
     const data = [
       { _id: "abc1", name: "Mercedes-Benz", brandValue: "$65.04 Billion" },
       { _id: "abc2", name: "Toyota", brandValue: " $58.07 Billion" },
@@ -86,40 +83,33 @@ class App extends Component {
     // 需要测试A4一行能带你多少个字。
     // ES2017加入了String.protytpe.padStart和padEnd,性能不错
     //console.log("Hello world!".padStart(20))
-    const subTitle = fields.reduce((total, item) => {
+    let subTitle = fields.reduce((total, item) => {
       return total + item.padStart(20);
     });
 
-    const content = data.reduce((total, item, currentIndex) => {
-      return (
-        total +
-        (currentIndex + " ").padStart(20) +
-        item.name.padStart(30) +
-        item.brandValue.padStart(18)
-      );
+    let newArray = data.map((line, index) => {
+      let lineContent = index.toString().padStart("5");
+      for (let field of fields) {
+        lineContent += line[field].toString().padStart("20");
+      }
+      return lineContent;
     });
+
+    subTitle = "Inventory ".concat(" ") + subTitle;
     this.setState({
       subTitle,
-      content: content.slice("[object Object]".length),
+      content: newArray,
     });
-    console.log(
-      "hi,",
-      content,
-      " pos ",
-      content.slice("[object Object]".length)
-    );
   };
 
   render() {
+    const { subTitle, content } = this.state;
+
     return (
       <>
         <Provider store={store}>
           <main className="container  bg-white my-2 p-2" id="topDiv">
-            <button onClick={this.createContent}>Create Content</button>
-            <PDFSave
-              subtitle={this.state.subTitle}
-              content={this.state.content}
-            />
+            <Inventory />
           </main>
         </Provider>
       </>

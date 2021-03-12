@@ -47,16 +47,16 @@ class StockRecord extends Component {
 
   render() {
     const { stock: data, error, succeed } = this.state;
-    const alertClasses = "d-flex border rounded justify-content-between ".concat(
-      error ? " bg-danger" : "bg-info "
+    const alertClasses = "d-flex  my-2 p-2 border rounded justify-content-between".concat(
+      error ? " bg-danger" : "bg-success"
     );
 
     return (
       <>
         {(error || succeed) && (
           <div className={alertClasses} role="alert">
-            <div className="p-2">{error || succeed}</div>
-            <div className="p-2">
+            <div>{error || succeed}</div>
+            <div>
               <button
                 type="button"
                 className="btn-close"
@@ -66,11 +66,11 @@ class StockRecord extends Component {
             </div>
           </div>
         )}
-        <div className="row my-1">
+        <div className="row g-1">
           <InfoLabel title="area" content={data.area.name} />
           <InfoLabel title="item" content={data.product.name} />
           <InfoLabel title="qty" content={data.quantity} />
-          <div className="mb-2 row">
+          <div className="row g-0">
             <label
               htmlFor="actualQty"
               className="col-6 col-md-3 col-form-label fw-bold"
@@ -97,9 +97,9 @@ class StockRecord extends Component {
           {this.props.showDate && (
             <InfoLabel title="expired at" content={dateYMD(data.expiredDate)} />
           )}
-          <div className="row g-1 justify-content-begin">
+          <div className="row justify-content-between g-1">
             <button
-              className="btn btn-primary col-12 col-md-3 m-1"
+              className="btn btn-primary col-5"
               onClick={(event) => {
                 event.preventDefault();
                 this.clearMessage();
@@ -110,7 +110,7 @@ class StockRecord extends Component {
               Edit
             </button>
             <button
-              className="btn btn-warning border col-12 col-md-3  m-1"
+              className="btn btn-secondary border col-5 "
               onClick={this.handleSave}
             >
               Save

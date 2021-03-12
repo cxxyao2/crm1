@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import CheckGroup from "./CheckGroup";
-import { activityList } from "../config/config.json";
 import { saveItinerary } from "../services/itineraryservice";
 
 function ActivityLog(props) {

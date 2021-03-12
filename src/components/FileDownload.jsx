@@ -1,31 +1,65 @@
 import React, { useState } from "react";
 import PDFSave from "./PDFPrint/PDFSave";
+import { saveBlobtoLocalFile, makeCSV } from "../utils/fileTypeConvert";
 
-function FileDownload(props) {
+function FileDownload({
+  fileName,
+  subtitle,
+  initData,
+  pdfContent,
+  pageCount,
+  fieldsString,
+}) {
   const [fileType, setFileType] = useState("csv");
+  const [loading, setLoading] = useState(false);
 
   const fileTypes = ["CSV", "PDF", "JSON"];
 
+  const downloadCSVFile = () => {
+    if (!(initData && initData.length >= 1)) return;
+    let output = [];
+    const fields = Object.keys(initData[0]);
+    output.push(fields);
+    initData.forEach((row) => {
+      let rowData = [];
+      for (const [key, value] of Object.entries(row)) {
+        rowData.push(value);
+      }
+      output.push(rowData);
+    });
+    const csvFileData = makeCSV(output);
+    saveBlobtoLocalFile(csvFileData, fileName + ".csv", "text/csv");
+  };
 
-  // PDF , 有专门的PDF生成器来处理,
-  // 此函数只处理csv和JSON
-  const handleClick = ()=> {
-    const {data} = props;
+  const handleClick = () => {
+    if (!(initData && initData.length >= 1)) return;
     switch (fileType) {
       case "CSV":
-        // 换成CSV
-        // 下载
+        // 下载开始
+        setLoading(true);
+        downloadCSVFile();
+        setTimeout(() => {
+          // 下载完毕
+          setLoading(false);
+        }, 1000);
         break;
-        case "JSON":
-        // 转换成JSON
-        // 下载
-          break;
-        default:
-          break;
+      case "JSON":
+        // 下载开始
+        setLoading(true);
+        let content = JSON.stringify(initData);
+        saveBlobtoLocalFile(content, fileName + ".json", "text/json");
+        setTimeout(() => {
+          // 下载完毕
+          setLoading(false);
+        }, 1000);
+        break;
+      default:
+        break;
     }
-  }
+  };
+
   return (
-    <div className="row">
+    <div className="row g-1 mt-2 ">
       {fileTypes.map((fileType, index) => (
         <div className="col-12 col-md-3" key={fileType}>
           <div className="form-check">
@@ -35,7 +69,9 @@ function FileDownload(props) {
               name="fileType"
               id={"typeRadio".concat(index)}
               value={fileType}
-              onChange={() => setFileType(fileType)}
+              onClick={() => {
+                setFileType(fileType);
+              }}
             />
             <label
               className="form-check-label"
@@ -46,12 +82,24 @@ function FileDownload(props) {
           </div>
         </div>
       ))}
-
       <div className="col-12 col-md-3">
-        {fileType === "PDF" && <PDFSave subtitle="zzz" content="bbbb" />}
+        {fileType === "PDF" && (
+          <span>
+            <PDFSave
+              subtitle={subtitle}
+              content={pdfContent}
+              fileName={fileName + ".pdf"}
+              pageCount={pageCount}
+              fieldsString={fieldsString}
+            />
+          </span>
+        )}
         {(fileType === "CSV" || fileType === "JSON") && (
-          <span className="text-primary text-decoration-underline" onClick={handleClick}>
-            Download
+          <span
+            className="text-primary text-decoration-underline"
+            onClick={handleClick}
+          >
+            {loading ? "Loading..." : "Download"}
           </span>
         )}
       </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
-import { Line } from "recharts";
+import { LineNumberPerPage } from "../../config/config.json";
 
 // Create styles
 const styles = StyleSheet.create({
@@ -23,6 +23,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: "justify",
   },
+  tableTitle: {
+    margin: 12,
+    fontSize: 12,
+    fontWeight: "bold",
+    textAlign: "justify",
+  },
 });
 
 const Subtitle = ({ children, ...props }) => (
@@ -30,27 +36,32 @@ const Subtitle = ({ children, ...props }) => (
     {children}
   </Text>
 );
-const LineNumberOfPage = 20;
+
 // Create Document Component
 // 20 line every page
 // one Text = one Line in A4
 // 90 characters = one lines
-const MyDocument = ({ subtitle, content, pageNumber }) => (
+// lineContent 每行内容第一列是行号
+const MyDocument = ({ subtitle, content, pageCount, fieldsString }) => (
   <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.section}>
-        <Subtitle style={styles.subtitle}>Section #1</Subtitle>
-        {Array.apply(null, Array(pageNumber)).map((item, index) =>
-          content
-            .slice(index * LineNumberOfPage, LineNumberOfPage - 1)
+    {Array.apply(null, Array(pageCount)).map((item, index) => (
+      <Page key={index} size="A4" style={styles.page}>
+        <View style={styles.section}>
+          <Subtitle style={styles.subtitle}>{subtitle}</Subtitle>
+          <Text style={styles.tableTitle}>{fieldsString}</Text>
+          {content
+            .slice(
+              index * LineNumberPerPage,
+              index * LineNumberPerPage + LineNumberPerPage
+            )
             .map((lineContent, index2) => (
-              <Text style={styles.text}>
-                {index2 + " "} {lineContent}
+              <Text key={index2} style={styles.text}>
+                {lineContent}
               </Text>
-            ))
-        )}
-      </View>
-    </Page>
+            ))}
+        </View>
+      </Page>
+    ))}
   </Document>
 );
 

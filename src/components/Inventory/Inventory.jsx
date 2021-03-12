@@ -1,23 +1,29 @@
 import Form from "../Form";
-import { getTodayYMD } from "../../utils/dateFormat";
+import { getTodayYMD, dateYMD } from "../../utils/dateFormat";
 import InfoLabel from "../InfoLabel";
 import StockRecord from "./StockRecord";
 import service from "../../services/stockService";
 import areaService from "../../services/masterDataService";
 import Joi from "joi-browser";
 import Select from "../Select";
-import { saveBlobtoLocalFile, makeCSV } from "../../utils/fileTypeConvert";
+import FileDownload from "../FileDownload";
+import { LineNumberPerPage } from "../../config/config.json";
 
 class Inventory extends Form {
   state = {
-    data: { storageArea: "", showExpired: false },
+    searchData: { storageArea: "", showExpired: false },
     errors: {},
     errorMessage: undefined,
     areas: undefined,
     userName: "Mike",
     stockData: undefined,
+    downloadData: undefined,
+    pdfContent: undefined,
+    pdfPageCount: 0,
+    pdfFieldsString: "",
   };
 
+  downloadFileName = "inventory"; // extension is optional
   schema = {
     storageArea: Joi.string().required().trim(),
     showExpired: Joi.boolean(),
@@ -32,15 +38,56 @@ class Inventory extends Form {
     this.setState({ areas: result.data });
   };
 
+  createPDFFile = () => {
+    const { downloadData } = this.state;
+    if (!(downloadData && downloadData.length >= 1)) return;
+
+    const fields = Object.keys(downloadData[0]);
+    let fieldsString = fields.reduce((total, item) => {
+      return total + item.padStart(10);
+    });
+
+    let newArray = downloadData.map((line, index) => {
+      let lineContent = index.toString().padStart("5");
+      for (let field of fields) {
+        lineContent += line[field].toString().padStart("20");
+      }
+      return lineContent;
+    });
+
+    const pageCount = newArray
+      ? Math.ceil(newArray.length / LineNumberPerPage)
+      : 0;
+
+    this.setState({
+      pdfContent: newArray,
+      pdfPageCount: pageCount,
+      pdfFieldsString: fieldsString,
+    });
+  };
+
   doSubmit = async () => {
-    console.log("hi,data is ", this.state.data);
     try {
-      const result = await service.getStocks(this.state.data["storageArea"]);
+      const result = await service.getStocks(
+        this.state.searchData["storageArea"]
+      );
 
       if (result.data && result.data.length >= 1) {
-        this.setState({ stockData: result.data });
+        let downloadData = [];
+        result.data.map((item, index) =>
+          downloadData.push({
+            area: item.area.name,
+            product: item.product.name,
+            quantity: item.quantity,
+            "real Qty": item.quantity,
+            unit: "barrel",
+            expired: dateYMD(item.expiredDate),
+          })
+        );
+        this.setState({ stockData: result.data, downloadData });
+        this.createPDFFile();
       } else {
-        this.setState({ stockData: undefined });
+        this.setState({ stockData: undefined, downloadData: undefined });
       }
     } catch (error) {
       this.setState({ errorMessage: error.message });
@@ -48,21 +95,21 @@ class Inventory extends Form {
   };
 
   handleChange = ({ currentTarget: input }) => {
-    const data = { ...this.state.data };
+    const searchData = { ...this.state.searchData };
 
     if (input.name === "storageArea") {
-      data[input.name] = input.value;
+      searchData[input.name] = input.value;
     }
 
     if (input.name === "showExpired") {
       if (input.checked) {
-        data[input.name] = true;
+        searchData[input.name] = true;
       } else {
-        data[input.name] = false;
+        searchData[input.name] = false;
       }
     }
-    this.setState({ data });
-    console.log("new data is", data);
+    this.setState({ searchData });
+    console.log("new data is", searchData);
 
     const errors = { ...this.state.errors };
     let errorMessage;
@@ -75,40 +122,17 @@ class Inventory extends Form {
     this.setState({ errors });
   };
 
-  downloadFile = (event) => {
-    event.preventDefault();
-    let output = [];
-    const { stockData } = this.state;
-    if (stockData && stockData.length >= 1) {
-      output.push([
-        "_id",
-        "area._id",
-        "area.code",
-        "area.name",
-        "product._id",
-        "product.name",
-        "quantity",
-        "expiredDate",
-      ]);
-      stockData.forEach((row) => {
-        output.push([
-          row.id,
-          row.area._id,
-          row.area.code,
-          row.area.name,
-          row.product._id,
-          row.product.name,
-          row.quantity,
-          row.expiredDate,
-        ]);
-      });
-      let content = makeCSV(output);
-      saveBlobtoLocalFile(content, "stockdata.csv", "text/csv");
-    }
-  };
-
   render() {
-    const { stockData, userName, areas, data } = this.state;
+    const {
+      stockData,
+      downloadData,
+      userName,
+      areas,
+      searchData,
+      pdfContent,
+      pdfPageCount,
+      pdfFieldsString,
+    } = this.state;
     if (this.state.errorMessage) {
       return <div>{this.state.errorMessage}</div>;
     }
@@ -116,10 +140,10 @@ class Inventory extends Form {
       <>
         <form onSubmit={this.handleSubmit}>
           <div className="container  border rounded bg-white my-2 p-2">
-            <div className=" col-12 my-2  py-2 bg-light fw-bold">
-              Inventory Keeping
+            <div className="row g-1  mt-2 py-2 bg-light ">
+              <h2>Inventory Keeping</h2>
             </div>
-            <div className="row">
+            <div className="row g-1 mt-2">
               <InfoLabel title={"Date"} content={getTodayYMD()}>
                 <i
                   className="fa fa-calendar"
@@ -128,22 +152,24 @@ class Inventory extends Form {
               </InfoLabel>
               <InfoLabel title={"Operator"} content={userName} />
             </div>
-            <span
-              className="link-primary col-6 col-md-6 text-decoration-underline"
-              onClick={this.downloadFile}
-            >
-              <i
-                className="fa fa-cloud-download"
-                style={{ fontSize: "1rem", color: "blue" }}
-              ></i>
-              Download
-            </span>
-            <div className="col-12 col-md-12 my-2">
-              {!areas && <label>no storage area data</label>}
+            {downloadData && downloadData.length >= 1 && (
+              <FileDownload
+                fileName={this.downloadFileName}
+                subtitle={
+                  "Inventory Real Time Data: " + new Date().toLocaleString()
+                }
+                initData={downloadData}
+                pdfContent={pdfContent}
+                pageCount={pdfPageCount}
+                fieldsString={pdfFieldsString}
+              />
+            )}
+
+            <div className="row g-1 my-2">
+              {!areas && <label>No storage area data</label>}
               {areas && (
                 <Select
                   name={"storageArea"}
-                  value={data["storageArea"]}
                   label={"Select a storage zone:"}
                   options={areas}
                   onChange={this.handleChange}
@@ -152,15 +178,12 @@ class Inventory extends Form {
                 />
               )}
             </div>
-            <div className="row g-1">
-              <button
-                className="btn btn-primary  col-12  col-md-3 m-1"
-                type="submit"
-              >
+            <div className="row g-1 mt-2 justify-content-between">
+              <button className="btn btn-primary  col-5 " type="submit">
                 search
               </button>
               <button
-                className="btn btn-secondary   col-12  col-md-3 m-1"
+                className="btn btn-secondary   col-5 "
                 data-bs-toggle="collapse"
                 data-bs-target="#collapseDate"
                 aria-expanded="false"
@@ -185,14 +208,14 @@ class Inventory extends Form {
             </div>
           </div>
         </form>
-        <div className="container  border rounded bg-white my-2">
+        <div className="container  border rounded bg-white my-2 p-2">
           {!stockData && <div>No Stock Data</div>}
           {stockData &&
             stockData.map((stock) => (
               <StockRecord
                 key={stock._id}
                 data={stock}
-                showDate={data.showExpired}
+                showDate={searchData.showExpired}
               />
             ))}
         </div>
